@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "103423991843",
+    "firebase_url": "https://dexterapp-bb161.firebaseio.com",
+    "project_id": "dexterapp-bb161",
+    "storage_bucket": "dexterapp-bb161.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103423991843:android:a080d071b8f46244",
+        "android_client_info": {
+          "package_name": "com.ccec.dexterapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "103423991843-d8rgoi3nih9d9mgem6nh6vi1huj5k5vj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKMuzxKdswBkwIPH9u4s65gWXMJtYqu0I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103423991843:android:b22cdb85508ebf00",
+        "android_client_info": {
+          "package_name": "com.ccec.dexterservice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "103423991843-d8rgoi3nih9d9mgem6nh6vi1huj5k5vj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKMuzxKdswBkwIPH9u4s65gWXMJtYqu0I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
