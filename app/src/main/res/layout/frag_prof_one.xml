@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linProf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/fullNameTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:textSize="15dp"
+            android:text="Full Name :"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:alpha="0.92" />
+
+        <TextView
+            android:id="@+id/fullNameDetail"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:text="Not Mentioned"
+            android:singleLine="false"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp"
+            android:alpha="0.92" />
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/linProf11"-->
+        <!--android:layout_below="@+id/linProf"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="100">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/skypeNameTitle"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="left"-->
+            <!--android:textSize="15dp"-->
+            <!--android:text="Skype ID :"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_weight="50"-->
+            <!--android:alpha="0.92" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/skypeNameDetail"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:singleLine="false"-->
+            <!--android:layout_gravity="left"-->
+            <!--android:text="Not Mentioned"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_weight="50"-->
+            <!--android:textColor="#F8B4BE"-->
+            <!--android:textSize="15dp"-->
+            <!--android:alpha="0.92" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/linProf1"-->
+        <!--android:layout_below="@+id/linProf11"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="100">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/companyNameTitle"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="left"-->
+            <!--android:textSize="15dp"-->
+            <!--android:text="Company :"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_weight="50"-->
+            <!--android:alpha="0.92" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/companyNameDetail"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="left"-->
+            <!--android:text="Not Mentioned"-->
+            <!--android:singleLine="false"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_weight="50"-->
+            <!--android:textColor="#F8B4BE"-->
+            <!--android:textSize="15dp"-->
+            <!--android:alpha="0.92" />-->
+    <!--</LinearLayout>-->
+
+    <LinearLayout
+        android:id="@+id/linProf2"
+        android:layout_below="@+id/linProf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/websiteNameTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:textSize="15dp"
+            android:text="Website :"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:alpha="0.92" />
+
+        <TextView
+            android:id="@+id/websiteNameDetail"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:text="Not Mentioned"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:singleLine="false"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp"
+            android:alpha="0.92" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linProf3"
+        android:layout_below="@+id/linProf2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/contactNameTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:textSize="15dp"
+            android:text="Contact :"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:alpha="0.92" />
+
+        <TextView
+            android:id="@+id/contactNameDetail"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:singleLine="false"
+            android:layout_gravity="left"
+            android:text="Not Mentioned"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp"
+            android:alpha="0.92" />
+    </LinearLayout>
+
+    <LinearLayout
+    android:id="@+id/linProf4"
+    android:layout_below="@+id/linProf3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="30dp"
+    android:orientation="horizontal"
+    android:weightSum="100">
+
+    <TextView
+    android:id="@+id/locationNameTitle"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="left"
+    android:textSize="15dp"
+    android:text="Location :"
+    android:layout_marginLeft="2dp"
+    android:layout_marginTop="2dp"
+    android:layout_weight="50"
+    android:alpha="0.92" />
+
+    <TextView
+    android:id="@+id/locationNameDetail"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="left"
+    android:text="Not Mentioned"
+    android:singleLine="false"
+    android:layout_marginLeft="2dp"
+    android:layout_marginTop="2dp"
+    android:layout_weight="50"
+    android:textColor="@color/colorPrimary"
+    android:textSize="15dp"
+    android:alpha="0.92" />
+    </LinearLayout>
+
+</RelativeLayout>

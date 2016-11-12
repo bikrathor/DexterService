@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/back_rectangle_border_black"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <EditText
+                android:id="@+id/profile_full_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="100"
+                android:padding="4dp"
+                android:background="@null"
+                android:hint="Full Name"
+                android:inputType="textPersonName"
+                android:textColor="#000"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="45dp"-->
+            <!--android:layout_marginLeft="38dp"-->
+            <!--android:layout_marginRight="38dp"-->
+            <!--android:layout_marginTop="12dp"-->
+            <!--android:background="@drawable/back_rectangle_border_black"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:weightSum="100">-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/profile_skype"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:layout_weight="100"-->
+                <!--android:padding="4dp"-->
+                <!--android:background="@null"-->
+                <!--android:hint="Skype ID"-->
+                <!--android:inputType="text"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="14dp" />-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="45dp"-->
+            <!--android:layout_marginLeft="38dp"-->
+            <!--android:layout_marginRight="38dp"-->
+            <!--android:layout_marginTop="12dp"-->
+            <!--android:background="@drawable/back_rectangle_border_black"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:weightSum="100">-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/profile_company"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:layout_weight="100"-->
+                <!--android:padding="4dp"-->
+                <!--android:background="@null"-->
+                <!--android:hint="Company"-->
+                <!--android:inputType="text"-->
+                <!--android:textColor="#000"-->
+                <!--android:textSize="14dp" />-->
+        <!--</LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/back_rectangle_border_black"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <EditText
+                android:id="@+id/profile_website"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="100"
+                android:background="@null"
+                android:hint="Website"
+                android:padding="4dp"
+                android:inputType="text"
+                android:textColor="#000"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/back_rectangle_border_black"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <EditText
+                android:id="@+id/profile_contact"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="100"
+                android:padding="4dp"
+                android:background="@null"
+                android:hint="Contact"
+                android:inputType="number"
+                android:textColor="#000"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/back_rectangle_border_black"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <EditText
+                android:id="@+id/profile_location"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="100"
+                android:padding="4dp"
+                android:background="@null"
+                android:hint="Pick Location"
+                android:inputType="number"
+                android:textColor="#000"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/updateProfButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/back_button_round_green"
+            android:text="Update Profile"
+            android:textColor="#ffff" />
+
+    </LinearLayout>
+</ScrollView>
