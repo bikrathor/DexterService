@@ -1,0 +1,22 @@
+databaseReference2 = FirebaseDatabase.getInstance().getReference("/variables/serviceNumber");
+        databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int serviceNumber = dataSnapshot.getValue(Integer.class);
+
+                Requests add = new Requests();
+
+                add.setIssuedTo("kuishcij263fjehv83");
+                add.setIssuedBy("euishcijfdjfbkldv83d");
+                add.setStatus("open");
+
+                databaseReference.child("DexterSR" + serviceNumber).setValue(add);
+                databaseReference2.setValue(serviceNumber + 1);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Something went wrong.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        });
