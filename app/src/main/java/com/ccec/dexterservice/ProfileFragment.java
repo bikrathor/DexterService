@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,7 +38,13 @@ import com.ccec.dexterservice.managers.UserSessionManager;
 import com.ccec.dexterservice.profiles.ProfileOne;
 import com.ccec.dexterservice.profiles.ProfileThree;
 import com.ccec.dexterservice.profiles.ProfileTwo;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.pkmmte.view.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,6 +75,7 @@ public class ProfileFragment extends Fragment {
     private ProgressBar progressBar;
     private AlertDialog dialog;
     private String picUrl;
+    private byte[] imageData;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,15 +103,7 @@ public class ProfileFragment extends Fragment {
         changeTabsFont();
 
         circularImageView = (CircularImageView) view.findViewById(R.id.circularImageProfileTab);
-        try {
-            if (profilePic.equals("") || profilePic == null) {
-//                Picasso.with(getContext()).load(R.drawable.icon_user).noPlaceholder().error(R.drawable.icon_cross).into(circularImageView);
-            } else {
-//                Picasso.with(getContext()).load(CloudletData.imageBaseURL + profilePic).noPlaceholder().error(R.drawable.icon_cross).into(circularImageView);
-            }
-        } catch (NullPointerException e) {
-//            Picasso.with(getContext()).load(R.drawable.icon_user).noPlaceholder().error(R.drawable.icon_cross).into(circularImageView);
-        }
+        getPic();
         circularImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +112,30 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void getPic() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        final StorageReference storageRef = storage.getReferenceFromUrl("gs://dexterapp-bb161.appspot.com");
+        storageRef.child("profilePics/" + uid + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.with(getActivity()).load(uri).noPlaceholder().into(circularImageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                storageRef.child("profilePics/" + uid + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+//                        Picasso.with(getActivity()).load(uri).into(circularImageView);
+
+                        Picasso.with(getActivity()).load(uri).placeholder(R.drawable.icon_user).noPlaceholder().into(circularImageView);
+
+                    }
+                });
+            }
+        });
     }
 
     private void changeTabsFont() {
@@ -180,9 +204,7 @@ public class ProfileFragment extends Fragment {
                         Bitmap bm = BitmapFactory.decodeFile(picturePath);
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        byte[] b = baos.toByteArray();
-
-                        encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+                        imageData = baos.toByteArray();
 
                         source = "gallery";
                         confirmUpload();
@@ -207,19 +229,17 @@ public class ProfileFragment extends Fragment {
 
         FileOutputStream fo;
         try {
-            byte[] b = bytes.toByteArray();
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(b);
-            fo.close();
-
-            encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+            imageData = bytes.toByteArray();
+//            destination.createNewFile();
+//            fo = new FileOutputStream(destination);
+//            fo.write(b);
+//            fo.close();
+//
+//            encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
 
             source = "camera";
             confirmUpload();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -254,7 +274,37 @@ public class ProfileFragment extends Fragment {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new PostData().execute();
+                text3.setText("Updating..");
+
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReferenceFromUrl("gs://dexterapp-bb161.appspot.com");
+                StorageReference imageRef = storageRef.child("profilePics/" + uid + ".jpg");
+                UploadTask uploadTask = imageRef.putBytes(imageData);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getActivity(), "Image updated", Toast.LENGTH_SHORT).show();
+
+                        ((HomePage) getActivity()).getPic();
+
+                        if (source.equals("camera"))
+                            circularImageView.setImageBitmap(thumbnail);
+                        else if (source.equals("gallery"))
+                            circularImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+                        dialog.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dialog.dismiss();
+                    }
+                });
+
                 ok.setEnabled(false);
                 cancel.setEnabled(false);
 
@@ -271,68 +321,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-//    class PostData extends AsyncTask<String, String, String> {
-//        private static final String url = BASE_URL + "/Requests/oxcenapplet.php";
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            circularImageView2.setVisibility(View.INVISIBLE);
-//            progressBar.setVisibility(View.VISIBLE);
-//            text3.setText("Updating..");
-//        }
-//
-//        protected String doInBackground(String... args) {
-//
-//            JSONStringParser jsonObjectParser = new JSONStringParser();
-//
-//            List<NameValuePair> params = new ArrayList<NameValuePair>();
-//
-//            params.add(new BasicNameValuePair("token", "qp1wo2ei3ri4tu5y6"));
-//            params.add(new BasicNameValuePair("method", "profile"));
-//            params.add(new BasicNameValuePair("action", "profilepic"));
-//            params.add(new BasicNameValuePair("user", uid));
-//            params.add(new BasicNameValuePair("pic", encodedImage));
-//
-//            String response = jsonObjectParser.makeServiceCall(url, JSONStringParser.POST, params);
-//
-//            Log.d("Response (PIC1111):", response.toString());
-//
-//            try {
-//                JSONObject jsonObject = new JSONObject(response);
-//                status = jsonObject.getString("success");
-//                if (status.equalsIgnoreCase("0")) {
-//                    picUrl = jsonObject.getString("data");
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//            return null;
-//        }
-//
-//        protected void onPostExecute(String file_url) {
-//            dialog.dismiss();
-//
-//            try {
-//                if (status.equalsIgnoreCase("0")) {
-//                    Toast.makeText(getActivity(), "Image Updated", Toast.LENGTH_SHORT).show();
-//                    ((HomePage) getActivity()).changeHeaderPic(picUrl);
-//
-//                    if (source.equals("camera"))
-//                        circularImageView.setImageBitmap(thumbnail);
-//                    else if (source.equals("gallery"))
-//                        circularImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-//                } else {
-//                    Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-//                }
-//            } catch (Exception e) {
-//            }
-//        }
-//    }
-
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }

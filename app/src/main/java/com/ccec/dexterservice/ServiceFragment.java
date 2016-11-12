@@ -1,6 +1,8 @@
 package com.ccec.dexterservice;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,33 +41,43 @@ public class ServiceFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_service, container, false);
 
-        requestsMap = new ArrayList<Map<String, Object>>();
-        recyclerViewList = new ArrayList<RequestRow>();
-        databaseReference = FirebaseDatabase.getInstance().getReference("/requests/" + AppData.serviceType);
-        recyclerView = (RecyclerView) view.findViewById(R.id.task_list);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(linearLayoutManager);
+        if (!isNetwork()) {
+            ((HomePage) getActivity()).showHelperNoConnection();
+        } else {
 
-        pDialog = new ProgressDialog(getActivity());
-        pDialog.setMessage("Updating...");
-        pDialog.setIndeterminate(false);
-        pDialog.setCancelable(false);
-        pDialog.show();
+            requestsMap = new ArrayList<Map<String, Object>>();
+            recyclerViewList = new ArrayList<RequestRow>();
+            databaseReference = FirebaseDatabase.getInstance().getReference("/requests/" + AppData.serviceType);
+            recyclerView = (RecyclerView) view.findViewById(R.id.task_list);
+            linearLayoutManager = new LinearLayoutManager(getActivity());
+            recyclerView.setLayoutManager(linearLayoutManager);
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                getAllRequests(dataSnapshot);
-            }
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Updating...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                pDialog.dismiss();
-            }
-        });
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    getAllRequests(dataSnapshot);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                    pDialog.dismiss();
+                }
+            });
+        }
 
         return view;
+    }
+
+    public boolean isNetwork() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     private void getAllRequests(DataSnapshot dataSnapshot) {

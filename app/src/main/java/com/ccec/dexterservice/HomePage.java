@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,7 +32,12 @@ import com.ccec.dexterservice.managers.CustomTypefaceSpan;
 import com.ccec.dexterservice.managers.FontsManager;
 import com.ccec.dexterservice.managers.HelperFragment;
 import com.ccec.dexterservice.managers.UserSessionManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.pkmmte.view.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -43,7 +50,7 @@ public class HomePage extends AppCompatActivity
     private boolean doubleBackToExitPressedOnce = false;
     private NavigationView navigationView;
     private CircularImageView view1;
-    private String userName, email, profilePic, location,contact;
+    private String id, email, location;
     private TextView header;
 
     @Override
@@ -74,40 +81,32 @@ public class HomePage extends AppCompatActivity
         session = new UserSessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
 
-        userName = user.get(UserSessionManager.TAG_fullname);
+        id = user.get(UserSessionManager.TAG_id);
         email = user.get(UserSessionManager.TAG_email);
         location = user.get(UserSessionManager.TAG_location);
 
         View hView = navigationView.inflateHeaderView(R.layout.nav_header_home_page);
         view1 = (CircularImageView) hView.findViewById(R.id.circularImage2);
-//        try {
-//            if (profilePic.equals("") || profilePic == null) {
-//                Picasso.with(getApplicationContext()).load(R.drawable.icon_user).noPlaceholder().error(R.drawable.icon_cross).into(view1);
-//            } else {
-//                Picasso.with(getApplicationContext()).load(CloudletData.imageBaseURL + profilePic).noPlaceholder().error(R.drawable.icon_cross).into(view1);
-//            }
-//        } catch (NullPointerException e) {
-//            Picasso.with(getApplicationContext()).load(R.drawable.icon_user).noPlaceholder().error(R.drawable.icon_cross).into(view1);
-//        }
+        getPic();
 
         header = (TextView) hView.findViewById(R.id.headerText);
         header.setText(email);
-//
-//        view1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ProfileFragment profileFragment = new ProfileFragment();
-//                getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.fragment_container, profileFragment).commit();
-//                getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Profile"));
-//
-//                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//                drawer.closeDrawer(GravityCompat.START);
-//
-//                navigationView.getMenu().getItem(5).setChecked(true);
-//                CloudletData.setSelectedItem(5);
-//            }
-//        });
+
+        view1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileFragment profileFragment = new ProfileFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, profileFragment).commit();
+                getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Profile"));
+
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+
+                navigationView.getMenu().getItem(1).setChecked(true);
+//                CloudletData.setSelectedItem(1);
+            }
+        });
 
         if (!location.equals("na")) {
             if (isNetwork()) {
@@ -116,14 +115,7 @@ public class HomePage extends AppCompatActivity
                         .replace(R.id.fragment_container, homeFragment).commit();
                 getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Home"));
             } else {
-                Bundle bundle = new Bundle();
-                bundle.putString("helper", "no_conn");
-
-                HelperFragment helpFragment = new HelperFragment();
-                helpFragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, helpFragment).commit();
-                getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Home"));
+                showHelperNoConnection();
             }
         } else {
             Bundle bundle = new Bundle();
@@ -137,12 +129,38 @@ public class HomePage extends AppCompatActivity
         }
     }
 
-//    public void changeHeaderPic(String url) {
-//        Picasso.with(getApplicationContext()).load(CloudletData.imageBaseURL + url).noPlaceholder().error(R.drawable.icon_cross).into(view1);
-//
-//        UserSessionManager sessionImage = new UserSessionManager(getApplicationContext());
-//        sessionImage.createUserLoginSession(1, url);
-//    }
+    public void showHelperNoConnection() {
+        Bundle bundle = new Bundle();
+        bundle.putString("helper", "no_conn");
+
+        HelperFragment helpFragment = new HelperFragment();
+        helpFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, helpFragment).commit();
+        getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Home"));
+        navigationView.getMenu().getItem(0).setChecked(true);
+    }
+
+    public void getPic() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        final StorageReference storageRef = storage.getReferenceFromUrl("gs://dexterapp-bb161.appspot.com");
+        storageRef.child("profilePics/" + id + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.with(getApplicationContext()).load(uri).noPlaceholder().into(view1);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                storageRef.child("profilePics/" + id + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.with(getApplicationContext()).load(uri).noPlaceholder().into(view1);
+                    }
+                });
+            }
+        });
+    }
 
     public void updatedActionBar(int pos, String tit) {
         navigationView.getMenu().getItem(pos).setChecked(true);
