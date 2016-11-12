@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Dexter Service</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>
