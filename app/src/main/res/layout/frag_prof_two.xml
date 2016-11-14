@@ -147,9 +147,9 @@
                 android:layout_marginLeft="5dp"
                 android:layout_weight="100"
                 android:padding="4dp"
+                android:editable="false"
                 android:background="@null"
                 android:hint="Pick Location"
-                android:inputType="number"
                 android:textColor="#000"
                 android:textSize="14dp" />
         </LinearLayout>

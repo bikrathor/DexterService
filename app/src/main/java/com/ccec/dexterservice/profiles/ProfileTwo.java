@@ -3,6 +3,7 @@ package com.ccec.dexterservice.profiles;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,8 +18,12 @@ import android.widget.Toast;
 
 import com.ccec.dexterservice.ProfileFragment;
 import com.ccec.dexterservice.R;
+import com.ccec.dexterservice.managers.AppData;
 import com.ccec.dexterservice.managers.FontsManager;
 import com.ccec.dexterservice.managers.UserSessionManager;
+import com.ccec.dexterservice.maps.UpdateMe;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -57,6 +62,14 @@ public class ProfileTwo extends Fragment {
         location.setTypeface(FontsManager.getRegularTypeface(getContext()));
         website.setTypeface(FontsManager.getRegularTypeface(getContext()));
         contact.setTypeface(FontsManager.getRegularTypeface(getContext()));
+
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent in = new Intent(getActivity(), UpdateMe.class);
+                startActivity(in);
+            }
+        });
 
         btn = (Button) view.findViewById(R.id.updateProfButton);
         btn.setTypeface(FontsManager.getBoldTypeface(getContext()));
@@ -158,6 +171,14 @@ public class ProfileTwo extends Fragment {
         databaseReference.child("contact").setValue(contactS);
         databaseReference.child("location").setValue(locationS);
 
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire");
+        GeoFire geoFire = new GeoFire(ref);
+        if (AppData.selectedLoc != null)
+            geoFire.setLocation(uid, new GeoLocation(AppData.selectedCordLoc.getLatitude(), AppData.selectedCordLoc.getLongitude()));
+
+        AppData.selectedLoc = "";
+        AppData.selectedCordLoc = null;
+
         pDialog.dismiss();
 
         session.createUserLoginSession(fNameS, "", websiteS, contactS, locationS);
@@ -167,5 +188,13 @@ public class ProfileTwo extends Fragment {
                 .replace(R.id.fragment_container, profileFragment).commit();
 //        ((HomePage) getActivity()).setVerificationMethod(5, "Profile");
 //        CloudletData.setSelectedItem(5);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (AppData.selectedLoc != null)
+            location.setText(AppData.selectedLoc);
     }
 }
