@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ccec.dexterservice.managers.AppData;
 import com.ccec.dexterservice.managers.FontsManager;
 import com.ccec.dexterservice.managers.UserSessionManager;
 import com.google.android.gms.tasks.OnCompleteListener;

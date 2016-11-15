@@ -44,9 +44,6 @@ public class ServiceFragment extends Fragment {
         if (!isNetwork()) {
             ((HomePage) getActivity()).showHelperNoConnection();
         } else {
-
-            requestsMap = new ArrayList<Map<String, Object>>();
-            recyclerViewList = new ArrayList<RequestRow>();
             databaseReference = FirebaseDatabase.getInstance().getReference("/requests/" + AppData.serviceType);
             recyclerView = (RecyclerView) view.findViewById(R.id.task_list);
             linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -61,6 +58,9 @@ public class ServiceFragment extends Fragment {
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    requestsMap = new ArrayList<Map<String, Object>>();
+                    recyclerViewList = new ArrayList<RequestRow>();
+
                     getAllRequests(dataSnapshot);
                 }
 
@@ -70,6 +70,7 @@ public class ServiceFragment extends Fragment {
                     pDialog.dismiss();
                 }
             });
+            databaseReference.keepSynced(true);
         }
 
         return view;
@@ -85,10 +86,12 @@ public class ServiceFragment extends Fragment {
             Map<String, Object> requestMap = (HashMap<String, Object>) singleSnapshot.getValue();
             requestsMap.add(requestMap);
         }
+
         getRequestDetails();
     }
 
     private void getRequestDetails() {
+
         for (int i = 0; i < requestsMap.size(); i++) {
             final int temp = i;
             databaseReference2 = FirebaseDatabase.getInstance().getReference("/items/" + AppData.serviceType + "/");
@@ -110,6 +113,7 @@ public class ServiceFragment extends Fragment {
                             return;
                         }
                     });
+            databaseReference2.keepSynced(true);
         }
     }
 

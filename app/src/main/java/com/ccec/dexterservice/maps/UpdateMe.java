@@ -101,7 +101,7 @@ public class UpdateMe extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public void onPlaceSelected(Place place) {
                 Log.i("PLace", "Placeeeeeeeeeee: " + place.getName());
-                source="auto";
+                source = "auto";
             }
 
             @Override
@@ -232,16 +232,19 @@ public class UpdateMe extends FragmentActivity implements OnMapReadyCallback {
             }
         });
 
-        location = mLocationManager
-                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        getCurrentName();
-
-        updateMyLocation(googleMap, location);
+        if (gps_enabled != false) {
+            location = mLocationManager
+                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (location!=null) {
+                getCurrentName();
+                updateMyLocation(googleMap, location);
+            }
+        }
 
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                source="normal";
+                source = "normal";
                 if (ActivityCompat.checkSelfPermission(UpdateMe.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(UpdateMe.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }

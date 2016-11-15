@@ -66,6 +66,13 @@ public class UserSessionManager {
         editor.commit();
     }
 
+    //alone update from home getPic()
+    public void createUserLoginSession(int id, String pic) {
+        editor.putString(TAG_profilepic, pic);
+
+        editor.commit();
+    }
+
     public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
 

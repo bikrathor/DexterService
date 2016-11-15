@@ -20,6 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".managers.Global"></activity>
+        <activity
             android:name=".Splash"
             android:label="Dexter Service"
             android:screenOrientation="portrait"
