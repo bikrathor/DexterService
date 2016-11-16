@@ -173,7 +173,7 @@ public class ProfileTwo extends Fragment {
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire");
         GeoFire geoFire = new GeoFire(ref);
-        if (AppData.selectedLoc != null)
+        if (AppData.selectedLoc != null && !AppData.selectedLoc.isEmpty())
             geoFire.setLocation(uid, new GeoLocation(AppData.selectedCordLoc.getLatitude(), AppData.selectedCordLoc.getLongitude()));
 
         AppData.selectedLoc = "";

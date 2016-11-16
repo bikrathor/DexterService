@@ -128,10 +128,7 @@ public class ProfileFragment extends Fragment {
                 storageRef.child("profilePics/" + uid + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-//                        Picasso.with(getActivity()).load(uri).into(circularImageView);
-
-                        Picasso.with(getActivity()).load(uri).placeholder(R.drawable.icon_user).noPlaceholder().into(circularImageView);
-
+                        Picasso.with(getActivity()).load(uri).noPlaceholder().into(circularImageView);
                     }
                 });
             }
@@ -251,6 +248,7 @@ public class ProfileFragment extends Fragment {
         builder.setCancelable(true);
         builder.setView(dialoglayout);
         dialog = builder.create();
+        dialog.setCancelable(false);
         dialog.show();
 
         circularImageView2 = (CircularImageView) dialoglayout.findViewById(R.id.circularImage);

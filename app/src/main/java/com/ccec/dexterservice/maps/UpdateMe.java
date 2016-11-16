@@ -197,6 +197,7 @@ public class UpdateMe extends FragmentActivity implements OnMapReadyCallback {
                     UpdateMe.this.finish();
                 }
             });
+            dialog.setCancelable(false);
             dialog.show();
         } else {
             Toast.makeText(UpdateMe.this, "Getting location..", Toast.LENGTH_SHORT).show();
