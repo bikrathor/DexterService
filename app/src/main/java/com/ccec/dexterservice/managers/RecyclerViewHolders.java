@@ -26,7 +26,5 @@ public class RecyclerViewHolders extends RecyclerView.ViewHolder {
 
         chat = (Button) itemView.findViewById(R.id.btnChat);
         accept = (Button) itemView.findViewById(R.id.btnAccept);
-
-
     }
 }

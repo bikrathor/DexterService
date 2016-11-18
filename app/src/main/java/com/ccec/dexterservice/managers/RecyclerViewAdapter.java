@@ -44,6 +44,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.areaModel.setText((String) itemMap.get("model"));
         holder.openTime.setText((String) requestMap.get("openTime"));
         holder.scheduledTime.setText((String) requestMap.get("scheduleTime"));
+
+        holder.requestID.setTypeface(FontsManager.getBoldTypeface(context));
+        holder.areaModel.setTypeface(FontsManager.getRegularTypeface(context));
+        holder.openTime.setTypeface(FontsManager.getRegularTypeface(context));
+        holder.scheduledTime.setTypeface(FontsManager.getRegularTypeface(context));
+
+        if (((String) requestMap.get("status")).equals("Accepted")) {
+            holder.accept.setVisibility(View.INVISIBLE);
+            holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
+        } else if (((String) requestMap.get("status")).equals("Completed")) {
+            holder.accept.setVisibility(View.INVISIBLE);
+            holder.chat.setVisibility(View.INVISIBLE);
+
+        } else {
+            holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
+            holder.accept.setTypeface(FontsManager.getRegularTypeface(context));
+        }
     }
 
     @Override

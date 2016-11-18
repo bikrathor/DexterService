@@ -9,6 +9,7 @@ import android.location.Location;
 public class AppData {
     //updated from profile
     public static String serviceType = "Car";
+
     public static String selectedLoc = "";
     public static Location selectedCordLoc = null;
 }
