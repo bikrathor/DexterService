@@ -1,4 +1,4 @@
-//add request from customer app
+//addd request from customer app
 databaseReference2 = FirebaseDatabase.getInstance().getReference("/variables/serviceNumber");
         databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
