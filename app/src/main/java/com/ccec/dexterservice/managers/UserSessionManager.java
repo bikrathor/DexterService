@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.ccec.dexterservice.Login;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class UserSessionManager {
     SharedPreferences pref;
@@ -28,7 +30,6 @@ public class UserSessionManager {
     public static final String TAG_website = "website";
     public static final String TAG_contact = "contact";
     public static final String TAG_location = "location";
-
 
     public UserSessionManager(Context context) {
         this._context = context;
@@ -91,6 +92,9 @@ public class UserSessionManager {
     }
 
     public void logoutUser() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("/users/ServiceCenter/" + pref.getString(TAG_id, null));
+        databaseReference.child("fcm").setValue("out");
+
         editor.clear();
         editor.commit();
 

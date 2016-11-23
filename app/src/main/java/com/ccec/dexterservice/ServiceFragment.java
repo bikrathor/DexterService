@@ -46,10 +46,12 @@ public class ServiceFragment extends Fragment {
     private List<RequestRow> recyclerViewList;
     private ProgressDialog pDialog;
     private UserSessionManager session;
-    private String id;
+    private String id, loc;
     private int selectedId = 0;
     private DataSnapshot mySnap;
     private RelativeLayout errorSec;
+    private ImageView erImg;
+    private TextView erTxt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +63,7 @@ public class ServiceFragment extends Fragment {
         } else {
             session = new UserSessionManager(getActivity());
             HashMap<String, String> user = session.getUserDetails();
+            loc = user.get(UserSessionManager.TAG_location);
             id = user.get(UserSessionManager.TAG_id);
 
             recyclerView = (RecyclerView) view.findViewById(R.id.task_list);
@@ -77,6 +80,9 @@ public class ServiceFragment extends Fragment {
 
             ImageView imgStatus = (ImageView) view.findViewById(R.id.imageView2);
             imgStatus.setOnClickListener(null);
+
+            erTxt = (TextView) view.findViewById(R.id.errorHeader);
+            erImg = (ImageView) view.findViewById(R.id.errorImage);
 
             Spinner spinnerLoc = (Spinner) view.findViewById(R.id.statusSpinner);
             List<String> categories = new ArrayList<String>();
@@ -116,9 +122,10 @@ public class ServiceFragment extends Fragment {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     selectedId = position;
 
-                    showDialog();
-                    if (mySnap != null)
+                    if (mySnap != null) {
+                        showDialog();
                         getAllRequests(mySnap);
+                    }
                 }
 
                 @Override
@@ -195,6 +202,14 @@ public class ServiceFragment extends Fragment {
         if (requestsMap.size() == 0) {
             errorSec.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.INVISIBLE);
+
+            if (loc.equals("na")) {
+                erTxt.setText("Profile not updated");
+                erImg.setImageResource(R.drawable.icon_not_verified);
+            } else {
+                erTxt.setText("No Request Found");
+                erImg.setImageResource(R.drawable.icon_bin_empty);
+            }
 
             stopLoading();
         } else {

@@ -35,6 +35,9 @@ import com.ccec.dexterservice.managers.HelperFragment;
 import com.ccec.dexterservice.managers.UserSessionManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -44,6 +47,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class HomePage extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -77,6 +81,15 @@ public class HomePage extends AppCompatActivity
             window.setStatusBarColor(getResources().getColor(R.color.colorGreen));
         }
 
+        //sample noti push
+//        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("/notifs");
+//
+//        Map notification = new HashMap<>();
+//        notification.put("username", "fEMp5APLeVc:APA91bGURclfd_VwOE3LZRlaN5n7eIyhD23Dhwh6v0BcpxfXSItBpMadiSO-k3m80pNOT79m32VgBJRsUbhhJqycJDiKiVusEi7akjDISD-HS0mgXzPPWW-AUKML6kiDSc92WuLRFAod");
+//        notification.put("message", "helloo");
+//
+//        databaseReference2.push().setValue(notification);
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -88,6 +101,8 @@ public class HomePage extends AppCompatActivity
         id = user.get(UserSessionManager.TAG_id);
         email = user.get(UserSessionManager.TAG_email);
         location = user.get(UserSessionManager.TAG_location);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
 
         View hView = navigationView.inflateHeaderView(R.layout.nav_header_home_page);
         view1 = (CircularImageView) hView.findViewById(R.id.circularImage2);
