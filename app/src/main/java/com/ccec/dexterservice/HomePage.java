@@ -257,8 +257,11 @@ public class HomePage extends AppCompatActivity
                     .replace(R.id.fragment_container, profileFragment).commit();
             getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Profile"));
             // CloudletData.setSelectedItem(5);
-        } else if (id == R.id.bla) {
-
+        } else if (id == R.id.files) {
+            FilesFragment profileFragment = new FilesFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, profileFragment).commit();
+            getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Files"));
         } else if (id == R.id.blabla) {
 
         } else if (id == R.id.logout) {

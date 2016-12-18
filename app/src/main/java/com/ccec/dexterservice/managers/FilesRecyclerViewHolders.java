@@ -1,5 +1,6 @@
 package com.ccec.dexterservice.managers;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -10,25 +11,22 @@ import com.ccec.dexterservice.entities.RequestRow;
 import com.pkmmte.view.CircularImageView;
 
 import java.util.List;
+import java.util.Map;
 
-public class RecyclerViewHolders extends RecyclerView.ViewHolder {
+public class FilesRecyclerViewHolders extends RecyclerView.ViewHolder {
     public CircularImageView RVCircle;
-    public TextView requestID, areaModel, openTime, scheduledTime;
-    public Button chat, accept;
-    private List<RequestRow> requestRowObject;
+    public TextView requestID, areaModel;
+    private List<String> itemMap;
+    public CardView card_view;
 
-    public RecyclerViewHolders(final View itemView, final List<RequestRow> requestRowObject) {
+    public FilesRecyclerViewHolders(final View itemView, final List<String> requestRowObject) {
         super(itemView);
-        this.requestRowObject = requestRowObject;
+        this.itemMap = requestRowObject;
 
         RVCircle = (CircularImageView) itemView.findViewById(R.id.product_circle);
+        card_view = (CardView) itemView.findViewById(R.id.card_view);
 
         requestID = (TextView) itemView.findViewById(R.id.tvItem);
         areaModel = (TextView) itemView.findViewById(R.id.tvAreaModel);
-        openTime = (TextView) itemView.findViewById(R.id.tvOT);
-        scheduledTime = (TextView) itemView.findViewById(R.id.tvST);
-
-        chat = (Button) itemView.findViewById(R.id.btnChat);
-        accept = (Button) itemView.findViewById(R.id.btnAccept);
     }
 }

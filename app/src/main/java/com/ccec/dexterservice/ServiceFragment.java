@@ -84,6 +84,24 @@ public class ServiceFragment extends Fragment {
             erTxt = (TextView) view.findViewById(R.id.errorHeader);
             erImg = (ImageView) view.findViewById(R.id.errorImage);
 
+            databaseReference = FirebaseDatabase.getInstance().getReference("/requests/" + AppData.serviceType);
+            Query query = databaseReference.orderByChild("issuedTo").equalTo(id);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    requestsMap = new ArrayList<Map<String, Object>>();
+                    recyclerViewList = new ArrayList<RequestRow>();
+
+                    mySnap = dataSnapshot;
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            databaseReference.keepSynced(true);
+
             Spinner spinnerLoc = (Spinner) view.findViewById(R.id.statusSpinner);
             List<String> categories = new ArrayList<String>();
             categories.add("Open");
@@ -133,27 +151,6 @@ public class ServiceFragment extends Fragment {
 
                 }
             });
-
-//            showDialog();
-
-            databaseReference = FirebaseDatabase.getInstance().getReference("/requests/" + AppData.serviceType);
-            Query query = databaseReference.orderByChild("issuedTo").equalTo(id);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    requestsMap = new ArrayList<Map<String, Object>>();
-                    recyclerViewList = new ArrayList<RequestRow>();
-
-                    mySnap = dataSnapshot;
-//                    getAllRequests(dataSnapshot);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-            databaseReference.keepSynced(true);
         }
 
         return view;
