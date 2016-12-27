@@ -17,8 +17,8 @@ public class ProfileOne extends Fragment {
     private TextView title, website, contact, name;
     private TextView titleD, websiteD, contactD, nameD;
     private UserSessionManager session;
-    private String pcontact, pwebsite, pname, plocation;
-    private TextView location, locationD;
+    private String pcontact, pwebsite, pname, plocation, pmake;
+    private TextView location, locationD, makes, makesD;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,17 +30,20 @@ public class ProfileOne extends Fragment {
         pcontact = user.get(UserSessionManager.TAG_contact);
         pwebsite = user.get(UserSessionManager.TAG_website);
         pname = user.get(UserSessionManager.TAG_fullname);
+        pmake = user.get(UserSessionManager.TAG_makes);
         plocation = user.get(UserSessionManager.TAG_location);
 
         name = (TextView) view.findViewById(R.id.fullNameTitle);
         website = (TextView) view.findViewById(R.id.websiteNameTitle);
         contact = (TextView) view.findViewById(R.id.contactNameTitle);
         location = (TextView) view.findViewById(R.id.locationNameTitle);
+        makes = (TextView) view.findViewById(R.id.makeNameTitle);
 
         nameD = (TextView) view.findViewById(R.id.fullNameDetail);
         websiteD = (TextView) view.findViewById(R.id.websiteNameDetail);
         contactD = (TextView) view.findViewById(R.id.contactNameDetail);
         locationD = (TextView) view.findViewById(R.id.locationNameDetail);
+        makesD = (TextView) view.findViewById(R.id.makeNameDetail);
 
         if (pname.equals("") || pname == null || pname.equals("na")) {
             nameD.setText("Not Mentioned");
@@ -66,15 +69,23 @@ public class ProfileOne extends Fragment {
             locationD.setText(plocation);
         }
 
+        if (pmake.equals("") || pmake == null || pmake.equals("na")) {
+            makesD.setText("Not Mentioned");
+        } else {
+            makesD.setText(pmake);
+        }
+
         name.setTypeface(FontsManager.getRegularTypeface(getContext()));
         website.setTypeface(FontsManager.getRegularTypeface(getContext()));
         contact.setTypeface(FontsManager.getRegularTypeface(getContext()));
         location.setTypeface(FontsManager.getRegularTypeface(getContext()));
+        makes   .setTypeface(FontsManager.getRegularTypeface(getContext()));
 
         nameD.setTypeface(FontsManager.getRegularTypeface(getContext()));
         websiteD.setTypeface(FontsManager.getRegularTypeface(getContext()));
         contactD.setTypeface(FontsManager.getRegularTypeface(getContext()));
         locationD.setTypeface(FontsManager.getRegularTypeface(getContext()));
+        makesD.setTypeface(FontsManager.getRegularTypeface(getContext()));
 
         return view;
     }

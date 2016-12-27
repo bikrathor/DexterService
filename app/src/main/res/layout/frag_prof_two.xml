@@ -26,60 +26,60 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="100"
-                android:padding="4dp"
                 android:background="@null"
                 android:hint="Full Name"
                 android:inputType="textPersonName"
+                android:padding="4dp"
                 android:textColor="#000"
                 android:textSize="14dp" />
         </LinearLayout>
 
         <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="45dp"-->
-            <!--android:layout_marginLeft="38dp"-->
-            <!--android:layout_marginRight="38dp"-->
-            <!--android:layout_marginTop="12dp"-->
-            <!--android:background="@drawable/back_rectangle_border_black"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:weightSum="100">-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="45dp"-->
+        <!--android:layout_marginLeft="38dp"-->
+        <!--android:layout_marginRight="38dp"-->
+        <!--android:layout_marginTop="12dp"-->
+        <!--android:background="@drawable/back_rectangle_border_black"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="100">-->
 
-            <!--<EditText-->
-                <!--android:id="@+id/profile_skype"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_marginLeft="5dp"-->
-                <!--android:layout_weight="100"-->
-                <!--android:padding="4dp"-->
-                <!--android:background="@null"-->
-                <!--android:hint="Skype ID"-->
-                <!--android:inputType="text"-->
-                <!--android:textColor="#000"-->
-                <!--android:textSize="14dp" />-->
+        <!--<EditText-->
+        <!--android:id="@+id/profile_skype"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:layout_weight="100"-->
+        <!--android:padding="4dp"-->
+        <!--android:background="@null"-->
+        <!--android:hint="Skype ID"-->
+        <!--android:inputType="text"-->
+        <!--android:textColor="#000"-->
+        <!--android:textSize="14dp" />-->
         <!--</LinearLayout>-->
 
         <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="45dp"-->
-            <!--android:layout_marginLeft="38dp"-->
-            <!--android:layout_marginRight="38dp"-->
-            <!--android:layout_marginTop="12dp"-->
-            <!--android:background="@drawable/back_rectangle_border_black"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:weightSum="100">-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="45dp"-->
+        <!--android:layout_marginLeft="38dp"-->
+        <!--android:layout_marginRight="38dp"-->
+        <!--android:layout_marginTop="12dp"-->
+        <!--android:background="@drawable/back_rectangle_border_black"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="100">-->
 
-            <!--<EditText-->
-                <!--android:id="@+id/profile_company"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_marginLeft="5dp"-->
-                <!--android:layout_weight="100"-->
-                <!--android:padding="4dp"-->
-                <!--android:background="@null"-->
-                <!--android:hint="Company"-->
-                <!--android:inputType="text"-->
-                <!--android:textColor="#000"-->
-                <!--android:textSize="14dp" />-->
+        <!--<EditText-->
+        <!--android:id="@+id/profile_company"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:layout_weight="100"-->
+        <!--android:padding="4dp"-->
+        <!--android:background="@null"-->
+        <!--android:hint="Company"-->
+        <!--android:inputType="text"-->
+        <!--android:textColor="#000"-->
+        <!--android:textSize="14dp" />-->
         <!--</LinearLayout>-->
 
         <LinearLayout
@@ -100,8 +100,8 @@
                 android:layout_weight="100"
                 android:background="@null"
                 android:hint="Website"
-                android:padding="4dp"
                 android:inputType="text"
+                android:padding="4dp"
                 android:textColor="#000"
                 android:textSize="14dp" />
         </LinearLayout>
@@ -122,10 +122,10 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="100"
-                android:padding="4dp"
                 android:background="@null"
                 android:hint="Contact"
                 android:inputType="number"
+                android:padding="4dp"
                 android:textColor="#000"
                 android:textSize="14dp" />
         </LinearLayout>
@@ -146,10 +146,34 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="100"
-                android:padding="4dp"
-                android:editable="false"
                 android:background="@null"
+                android:editable="false"
                 android:hint="Pick Location"
+                android:padding="4dp"
+                android:textColor="#000"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/back_rectangle_border_black"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <EditText
+                android:id="@+id/profile_make"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="100"
+                android:background="@null"
+                android:editable="false"
+                android:hint="Make Supported"
+                android:padding="4dp"
                 android:textColor="#000"
                 android:textSize="14dp" />
         </LinearLayout>

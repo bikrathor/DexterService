@@ -30,6 +30,7 @@ public class UserSessionManager {
     public static final String TAG_website = "website";
     public static final String TAG_contact = "contact";
     public static final String TAG_location = "location";
+    public static final String TAG_makes = "makes";
 
     public UserSessionManager(Context context) {
         this._context = context;
@@ -49,13 +50,14 @@ public class UserSessionManager {
     }
 
     //updated from login and signup
-    public void createUserLoginSession(String uName, String pic, String website, String contact, String location) {
+    public void createUserLoginSession(String uName, String pic, String website, String contact, String location, String makes) {
         editor.putBoolean(IS_USER_LOGIN, true);
 
         editor.putString(TAG_website, website);
         editor.putString(TAG_contact, contact);
         editor.putString(TAG_fullname, uName);
         editor.putString(TAG_location, location);
+        editor.putString(TAG_makes, makes);
         editor.putString(TAG_profilepic, pic);
 
         editor.commit();
@@ -85,6 +87,7 @@ public class UserSessionManager {
         user.put(TAG_website, pref.getString(TAG_website, null));
         user.put(TAG_contact, pref.getString(TAG_contact, null));
         user.put(TAG_location, pref.getString(TAG_location, null));
+        user.put(TAG_makes, pref.getString(TAG_makes, null));
 
         user.put(FIRST_TIME, pref.getString(FIRST_TIME, null));
 

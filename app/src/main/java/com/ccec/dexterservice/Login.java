@@ -190,7 +190,7 @@ public class Login extends AppCompatActivity {
                                     Map<String, Object> itemMap = (HashMap<String, Object>) dataSnapshot.getValue();
                                     session.createUserLoginSession((String) itemMap.get("name"), "",
                                             (String) itemMap.get("website"), (String) itemMap.get("contact"),
-                                            (String) itemMap.get("location"));
+                                            (String) itemMap.get("location"), (String) itemMap.get("makes"));
 
                                     Toast.makeText(getApplicationContext(), "Welcome",
                                             Toast.LENGTH_LONG).show();

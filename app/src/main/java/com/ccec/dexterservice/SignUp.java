@@ -209,7 +209,7 @@ public class SignUp extends AppCompatActivity {
                             databaseReference.child("website").setValue("na");
                             databaseReference.child("fcm").setValue(FirebaseInstanceId.getInstance().getToken());
 
-                            session.createUserLoginSession("na", "", "na", "na", "na");
+                            session.createUserLoginSession("na", "", "na", "na", "na", "na");
 
                             Toast.makeText(getApplicationContext(), "Sign up successful",
                                     Toast.LENGTH_LONG).show();

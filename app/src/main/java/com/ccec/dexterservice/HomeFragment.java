@@ -30,8 +30,6 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-//        CloudletData.setLastActiveFragment("Profile");
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
         session = new UserSessionManager(getContext());
@@ -40,10 +38,11 @@ public class HomeFragment extends Fragment {
 //        profilePic = user.get(UserSessionManager.TAG_profilepic);
 //        email = user.get(UserSessionManager.TAG_email);
 
+
         mViewPager = (ViewPager) view.findViewById(R.id.containerHomeTabs);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         changeTabsFont();
 

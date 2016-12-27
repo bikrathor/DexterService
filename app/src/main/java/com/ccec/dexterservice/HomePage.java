@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,6 +30,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ccec.dexterservice.managers.AppData;
 import com.ccec.dexterservice.managers.CustomTypefaceSpan;
 import com.ccec.dexterservice.managers.FontsManager;
 import com.ccec.dexterservice.managers.HelperFragment;
@@ -60,6 +62,7 @@ public class HomePage extends AppCompatActivity
     private CircularImageView view1;
     private String id, email, location;
     private TextView header;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,8 @@ public class HomePage extends AppCompatActivity
         navigationView.getMenu().getItem(0).setChecked(true);
         changeDrawerFont();
 
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+
         session = new UserSessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
 
@@ -123,7 +128,8 @@ public class HomePage extends AppCompatActivity
                 drawer.closeDrawer(GravityCompat.START);
 
                 navigationView.getMenu().getItem(1).setChecked(true);
-//                CloudletData.setSelectedItem(1);
+                tabLayout.setVisibility(View.GONE);
+                AppData.setSelectedItem(1);
             }
         });
 
@@ -133,6 +139,8 @@ public class HomePage extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, homeFragment).commit();
                 getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Home"));
+                tabLayout.setVisibility(View.VISIBLE);
+                AppData.setSelectedItem(0);
             } else {
                 showHelperNoConnection();
             }
@@ -145,6 +153,7 @@ public class HomePage extends AppCompatActivity
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, helpFragment).commit();
             getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Home"));
+            tabLayout.setVisibility(View.GONE);
         }
     }
 
@@ -250,20 +259,26 @@ public class HomePage extends AppCompatActivity
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, homeFragment).commit();
             getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Home"));
+            tabLayout.setVisibility(View.VISIBLE);
+            AppData.setSelectedItem(0);
         } else if (id == R.id.profile) {
             //check for verification
             ProfileFragment profileFragment = new ProfileFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, profileFragment).commit();
             getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Profile"));
-            // CloudletData.setSelectedItem(5);
+            AppData.setSelectedItem(1);
+            tabLayout.setVisibility(View.GONE);
         } else if (id == R.id.files) {
             FilesFragment profileFragment = new FilesFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, profileFragment).commit();
             getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Files"));
+            tabLayout.setVisibility(View.GONE);
+            AppData.setSelectedItem(2);
         } else if (id == R.id.blabla) {
-
+            tabLayout.setVisibility(View.GONE);
+            AppData.setSelectedItem(3);
         } else if (id == R.id.logout) {
             builder = new AlertDialog.Builder(HomePage.this);
             builder.setTitle("Logout");
@@ -291,7 +306,11 @@ public class HomePage extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
                     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//                    navigationView.getMenu().getItem(CloudletData.getSelectedItem()).setChecked(true);
+                    navigationView.getMenu().getItem(AppData.getSelectedItem()).setChecked(true);
+                    if (AppData.getSelectedItem() != 0)
+                        tabLayout.setVisibility(View.GONE);
+                    else
+                        tabLayout.setVisibility(View.VISIBLE);
                 }
             });
 

@@ -12,4 +12,14 @@ public class AppData {
 
     public static String selectedLoc = "";
     public static Location selectedCordLoc = null;
+
+    public static int selectedItem = 0;
+
+    public static int getSelectedItem() {
+        return selectedItem;
+    }
+
+    public static void setSelectedItem(int selectedItem) {
+        AppData.selectedItem = selectedItem;
+    }
 }
