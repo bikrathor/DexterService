@@ -1,11 +1,16 @@
 package com.ccec.dexterservice;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,13 +18,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ccec.dexterservice.entities.Notif;
 import com.ccec.dexterservice.entities.RequestRow;
+import com.ccec.dexterservice.entities.Requests;
 import com.ccec.dexterservice.managers.AppData;
 import com.ccec.dexterservice.managers.FontsManager;
 import com.ccec.dexterservice.managers.RecyclerViewAdapter;
@@ -32,7 +42,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +65,11 @@ public class ServiceFragment extends Fragment {
     private RelativeLayout errorSec;
     private ImageView erImg;
     private TextView erTxt;
+    private Spinner spinnerLoc;
+    private Calendar myCalendar;
+    private DatePickerDialog.OnDateSetListener date;
+    private String dayFire, monthFire;
+    private Button subButton, calButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +83,19 @@ public class ServiceFragment extends Fragment {
             HashMap<String, String> user = session.getUserDetails();
             loc = user.get(UserSessionManager.TAG_location);
             id = user.get(UserSessionManager.TAG_id);
+
+            myCalendar = Calendar.getInstance();
+            date = new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                      int dayOfMonth) {
+                    myCalendar.set(Calendar.YEAR, year);
+                    myCalendar.set(Calendar.MONTH, monthOfYear);
+                    myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                    updateCal();
+                }
+            };
 
             recyclerView = (RecyclerView) view.findViewById(R.id.task_list);
             linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -84,25 +115,7 @@ public class ServiceFragment extends Fragment {
             erTxt = (TextView) view.findViewById(R.id.errorHeader);
             erImg = (ImageView) view.findViewById(R.id.errorImage);
 
-            databaseReference = FirebaseDatabase.getInstance().getReference("/requests/" + AppData.serviceType);
-            Query query = databaseReference.orderByChild("issuedTo").equalTo(id);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    requestsMap = new ArrayList<Map<String, Object>>();
-                    recyclerViewList = new ArrayList<RequestRow>();
-
-                    mySnap = dataSnapshot;
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-            databaseReference.keepSynced(true);
-
-            Spinner spinnerLoc = (Spinner) view.findViewById(R.id.statusSpinner);
+            spinnerLoc = (Spinner) view.findViewById(R.id.statusSpinner);
             List<String> categories = new ArrayList<String>();
             categories.add("Open");
             categories.add("Accepted");
@@ -134,7 +147,6 @@ public class ServiceFragment extends Fragment {
             };
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerLoc.setAdapter(dataAdapter);
-            spinnerLoc.setSelection(0, false);
             spinnerLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -151,16 +163,172 @@ public class ServiceFragment extends Fragment {
 
                 }
             });
+
+            databaseReference = FirebaseDatabase.getInstance().getReference("/requests/" + AppData.serviceType);
+            Query query = databaseReference.orderByChild("issuedTo").equalTo(id);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    requestsMap = new ArrayList<Map<String, Object>>();
+                    recyclerViewList = new ArrayList<RequestRow>();
+
+                    mySnap = dataSnapshot;
+                    if (AppData.setOne == true) {
+                        selectSpinnerItemByValue(spinnerLoc, 1);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            databaseReference.keepSynced(true);
         }
 
         return view;
+    }
+
+    private void updateCal() {
+        SimpleDateFormat format = new SimpleDateFormat("d");
+        String date = format.format(myCalendar.getTime());
+        if (date.endsWith("1") && !date.endsWith("11"))
+            format = new SimpleDateFormat("EE MMM d'st', yyyy");
+        else if (date.endsWith("2") && !date.endsWith("12"))
+            format = new SimpleDateFormat("EE MMM d'nd', yyyy");
+        else if (date.endsWith("3") && !date.endsWith("13"))
+            format = new SimpleDateFormat("EE MMM d'rd', yyyy");
+        else
+            format = new SimpleDateFormat("EE MMM d'th', yyyy");
+        String yourDate = format.format(myCalendar.getTime());
+
+        format = new SimpleDateFormat("d");
+        dayFire = format.format(myCalendar.getTime());
+        format = new SimpleDateFormat("MMM");
+        monthFire = format.format(myCalendar.getTime());
+
+        calButton.setText(yourDate);
+        subButton.setVisibility(View.VISIBLE);
+
+        myCalendar = Calendar.getInstance();
+    }
+
+    public void showInfo() {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialoglayout = inflater.inflate(R.layout.dialog_accept_order, null);
+        final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        builder.setCancelable(true);
+        builder.setView(dialoglayout);
+        final android.support.v7.app.AlertDialog dialog = builder.create();
+        dialog.show();
+
+        TextView txtButton = (TextView) dialoglayout.findViewById(R.id.headerTextCloudCreated);
+        txtButton.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+
+        calButton = (Button) dialoglayout.findViewById(R.id.btn_pollutioncheckdate);
+        subButton = (Button) dialoglayout.findViewById(R.id.btn_pollutioncheckdate2);
+        calButton.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        subButton.setTypeface(FontsManager.getBoldTypeface(getActivity()));
+        calButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog dialog = new DatePickerDialog(getActivity(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+
+                long now = System.currentTimeMillis() - 1000;
+                dialog.getDatePicker().setMinDate(now);
+                dialog.show();
+            }
+        });
+
+        subButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ProgressDialog pDialog = new ProgressDialog(getActivity());
+                pDialog.setMessage("Processing..");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(false);
+                pDialog.show();
+
+                SimpleDateFormat format = new SimpleDateFormat("d");
+                String date = format.format(new Date());
+                if (date.endsWith("1") && !date.endsWith("11"))
+                    format = new SimpleDateFormat("EE MMM d'st', yyyy");
+                else if (date.endsWith("2") && !date.endsWith("12"))
+                    format = new SimpleDateFormat("EE MMM d'nd', yyyy");
+                else if (date.endsWith("3") && !date.endsWith("13"))
+                    format = new SimpleDateFormat("EE MMM d'rd', yyyy");
+                else
+                    format = new SimpleDateFormat("EE MMM d'th', yyyy");
+                final String yourDate = format.format(new Date());
+
+                final DatabaseReference firebasedbref = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
+                firebasedbref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Requests requests = dataSnapshot.getValue(Requests.class);
+                        requests.setScheduleTime(dayFire + " " + monthFire);
+                        requests.setStatus("Accepted");
+
+                        DatabaseReference firebasedbref2 = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
+                        firebasedbref2.setValue(requests, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                pDialog.dismiss();
+                                dialog.dismiss();
+                                sendNotification();
+
+                                HomeFragment profileFragment = new HomeFragment();
+                                getActivity().getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, profileFragment).commit();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    private void sendNotification() {
+        DatabaseReference firebasedbrefproduct = FirebaseDatabase.getInstance().getReference("users/Customer/" + AppData.currentSelectedUser);
+        firebasedbrefproduct.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DatabaseReference firebasedbrefproduc = FirebaseDatabase.getInstance().getReference();
+                Notif notif = new Notif();
+                notif.setUsername((String) ((HashMap) dataSnapshot.getValue()).get("fcm"));
+                notif.setMessage("Order Accepted");
+                firebasedbrefproduc.child("notifs").push().setValue(notif);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void selectSpinnerItemByValue(Spinner spnr, long value) {
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) spnr.getAdapter();
+        for (int position = 0; position < adapter.getCount(); position++) {
+            if (adapter.getItemId(position) == value) {
+                spnr.setSelection(position);
+                return;
+            }
+        }
     }
 
     private void showDialog() {
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage("Updating...");
         pDialog.setIndeterminate(false);
-        pDialog.setCancelable(false);
+        pDialog.setCancelable(true);
         pDialog.show();
     }
 
@@ -223,7 +391,7 @@ public class ServiceFragment extends Fragment {
                                 Map<String, Object> itemMap = (HashMap<String, Object>) dataSnapshot2.getValue();
                                 recyclerViewList.add(new RequestRow(requestsMap.get(temp), itemMap));
 
-                                recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), recyclerViewList, ServiceFragment.this);
+                                recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), recyclerViewList, ServiceFragment.this, spinnerLoc);
                                 recyclerView.setAdapter(recyclerViewAdapter);
                             }
 

@@ -15,6 +15,11 @@ public class AppData {
 
     public static int selectedItem = 0;
 
+    public static boolean setOne = true;
+
+    public static String currentPath = "";
+    public static String currentSelectedUser = "";
+
     public static int getSelectedItem() {
         return selectedItem;
     }

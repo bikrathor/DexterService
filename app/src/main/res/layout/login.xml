@@ -38,7 +38,7 @@
             android:padding="4dp"
             android:background="@null"
             android:hint="Email"
-            android:text="bikramjitrathor868@gmail.com"
+            android:text="gmail.com"
             android:inputType="textEmailAddress"
             android:textColor="#000" />
     </LinearLayout>
@@ -65,6 +65,7 @@
             android:layout_weight="100"
             android:background="@null"
             android:hint="Password"
+            android:text="111111"
             android:textColor="#000"
             android:inputType="textPassword" />
     </LinearLayout>

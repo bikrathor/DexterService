@@ -20,6 +20,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+
         <activity android:name=".managers.Global" />
         <activity
             android:name=".Splash"
@@ -62,7 +63,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDcjD6d9x-RstfWQmqtTNDDrLIMZzvvB6E" />
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".maps.UpdateMe"
@@ -73,18 +74,16 @@
             android:label="@string/title_activity_maps" />
 
         <!-- [START firebase_service] -->
-        <service
-            android:name=".managers.MyFirebaseMessagingService">
+        <service android:name=".managers.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <!-- [END firebase_service] -->
         <!-- [START firebase_iid_service] -->
-        <service
-            android:name=".managers.FirebaseInstanceID">
+        <service android:name=".managers.FirebaseInstanceID">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <!-- [END firebase_iid_service] -->

@@ -1,9 +1,5 @@
 package com.ccec.dexterservice;
 
-/**
- * Created by sandhu on 15-03-2016.
- */
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -80,7 +76,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
@@ -120,7 +115,11 @@ public class ProfileFragment extends Fragment {
         storageRef.child("profilePics/" + uid + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.with(getActivity()).load(uri).noPlaceholder().into(circularImageView);
+                try {
+                    Picasso.with(getActivity()).load(uri).noPlaceholder().into(circularImageView);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

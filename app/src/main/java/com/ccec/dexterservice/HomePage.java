@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -130,6 +131,7 @@ public class HomePage extends AppCompatActivity
                 navigationView.getMenu().getItem(1).setChecked(true);
                 tabLayout.setVisibility(View.GONE);
                 AppData.setSelectedItem(1);
+                AppData.setOne = false;
             }
         });
 
@@ -173,22 +175,21 @@ public class HomePage extends AppCompatActivity
         FirebaseStorage storage = FirebaseStorage.getInstance();
         final StorageReference storageRef = storage.getReferenceFromUrl("gs://dexterapp-bb161.appspot.com");
 
-        storageRef.child("profilePics/" + id + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(getApplicationContext()).load(uri).noPlaceholder().into(view1);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                storageRef.child("profilePics/" + id + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Picasso.with(getApplicationContext()).load(uri).noPlaceholder().into(view1);
-                    }
-                });
-            }
-        });
+        try {
+            storageRef.child("profilePics/" + id + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.with(getApplicationContext()).load(uri).noPlaceholder().into(view1);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void updatedActionBar(int pos, String tit) {
@@ -325,4 +326,13 @@ public class HomePage extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        AppData.setOne = true;
+//        Intent intent = new Intent(this, HomePage.class);
+//        startActivity(intent);
+//        finish();
+//    }
 }

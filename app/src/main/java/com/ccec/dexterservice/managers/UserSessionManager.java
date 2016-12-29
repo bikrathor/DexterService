@@ -94,6 +94,11 @@ public class UserSessionManager {
         return user;
     }
 
+    public void clearData() {
+        editor.clear();
+        editor.commit();
+    }
+
     public void logoutUser() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("/users/ServiceCenter/" + pref.getString(TAG_id, null));
         databaseReference.child("fcm").setValue("out");
