@@ -12,6 +12,15 @@ public class Requests {
     private String item;
     private String openTime;
     private String scheduleTime;
+    private String queries;
+
+    public String getQueries() {
+        return queries;
+    }
+
+    public void setQueries(String queries) {
+        this.queries = queries;
+    }
 
     public Requests() {
     }

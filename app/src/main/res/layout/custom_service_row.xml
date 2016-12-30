@@ -97,6 +97,7 @@
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/back_button_round_accent"
                 android:text="Chat"
+                android:visibility="gone"
                 android:textColor="#fff"
                 android:textSize="10dp" />
 
@@ -105,6 +106,7 @@
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 android:layout_below="@+id/btnChat"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/back_button_round_accent"
                 android:text="Accept"

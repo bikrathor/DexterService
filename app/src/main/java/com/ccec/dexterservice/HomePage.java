@@ -131,7 +131,6 @@ public class HomePage extends AppCompatActivity
                 navigationView.getMenu().getItem(1).setChecked(true);
                 tabLayout.setVisibility(View.GONE);
                 AppData.setSelectedItem(1);
-                AppData.setOne = false;
             }
         });
 
@@ -256,6 +255,7 @@ public class HomePage extends AppCompatActivity
 
         if (id == R.id.home) {
             //check for verification
+            AppData.setOne = true;
             HomeFragment homeFragment = new HomeFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, homeFragment).commit();

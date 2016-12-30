@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ccec.dexterservice.managers.CustomScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linProf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/fullNameTitle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="50"
+                android:alpha="0.92"
+                android:text="Placed by :"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/fullNameDetail"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="50"
+                android:alpha="0.92"
+                android:singleLine="false"
+                android:text="Fetching details.."
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linProf11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linProf"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/skypeNameTitle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="50"
+                android:alpha="0.92"
+                android:text="Placed for :"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/skypeNameDetail"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="50"
+                android:alpha="0.92"
+                android:singleLine="false"
+                android:text="Not Mentioned"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linProf1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linProf11"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/companyNameTitle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="50"
+                android:alpha="0.92"
+                android:text="Request placed on :"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/companyNameDetail"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="50"
+                android:alpha="0.92"
+                android:singleLine="false"
+                android:text="Not Mentioned"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/linProf111"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/linProf1"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:weightSum="100">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/contactNameTitle"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_gravity="left"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:layout_marginTop="2dp"-->
+                <!--android:layout_weight="50"-->
+                <!--android:alpha="0.92"-->
+                <!--android:text="Requested on :"-->
+                <!--android:textSize="15dp" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/contactNameDetail"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_gravity="left"-->
+                <!--android:layout_marginBottom="15dp"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:layout_marginTop="2dp"-->
+                <!--android:layout_weight="50"-->
+                <!--android:alpha="0.92"-->
+                <!--android:singleLine="false"-->
+                <!--android:text="Not Mentioned"-->
+                <!--android:textColor="@color/colorPrimary"-->
+                <!--android:textSize="15dp" />-->
+        <!--</LinearLayout>-->
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@+id/linProf1"
+            android:layout_margin="10dp" />
+
+        <ImageView
+            android:id="@+id/navigate"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/map"
+            android:layout_alignEnd="@+id/linProf1"
+            android:layout_alignRight="@+id/linProf1"
+            android:layout_marginBottom="35dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginRight="35dp"
+            android:src="@drawable/icon_navi" />
+    </RelativeLayout>
+</com.ccec.dexterservice.managers.CustomScrollView>

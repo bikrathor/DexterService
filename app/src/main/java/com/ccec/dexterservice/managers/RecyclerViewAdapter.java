@@ -1,6 +1,7 @@
 package com.ccec.dexterservice.managers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 
+import com.ccec.dexterservice.NewOrderDetail;
 import com.ccec.dexterservice.R;
 import com.ccec.dexterservice.ServiceFragment;
 import com.ccec.dexterservice.entities.RequestRow;
@@ -34,6 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     private ServiceFragment fragment;
     private CircularImageView img;
     private Spinner sp;
+    private int pos;
 
     public RecyclerViewAdapter(Context context, List<RequestRow> requestRow, ServiceFragment fragment, Spinner sp) {
         this.requestRow = requestRow;
@@ -58,12 +61,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerViewHolders holder, int position) {
+    public void onBindViewHolder(final RecyclerViewHolders holder, final int position) {
         final Map<String, Object> requestMap = requestRow.get(position).getRequestMap();
         Map<String, Object> itemMap = requestRow.get(position).getItemMap();
 
         holder.requestID.setText((String) requestMap.get("key"));
-        holder.areaModel.setText((String) itemMap.get("model"));
+        holder.areaModel.setText((String) itemMap.get("make") + " " + (String) itemMap.get("model"));
         holder.openTime.setText((String) requestMap.get("openTime"));
         holder.scheduledTime.setText((String) requestMap.get("scheduleTime"));
 
@@ -128,6 +131,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
                 fragment.showInfo();
             }
         });
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pos = position;
+                getProductDetails();
+            }
+        });
     }
 
     private void setPic(String path, final CircularImageView im) {
@@ -144,6 +155,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             public void onFailure(@NonNull Exception e) {
             }
         });
+    }
+
+    public void getProductDetails() {
+        Intent intent = new Intent(context, NewOrderDetail.class);
+
+        AppData.currentVeh = requestRow.get(pos).getRequestMap();
+        AppData.currentVehCust = requestRow.get(pos).getItemMap();
+
+        context.startActivity(intent);
     }
 
     @Override

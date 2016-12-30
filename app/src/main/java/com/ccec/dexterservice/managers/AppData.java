@@ -17,6 +17,9 @@ public class AppData {
 
     public static boolean setOne = true;
 
+    public static Object currentVeh = null;
+    public static Object currentVehCust = null;
+
     public static String currentPath = "";
     public static String currentSelectedUser = "";
 
