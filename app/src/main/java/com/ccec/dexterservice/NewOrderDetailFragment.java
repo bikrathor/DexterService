@@ -6,17 +6,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ccec.dexterservice.managers.AppData;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.LocationCallback;
+import com.google.android.gms.drive.internal.StringListResponse;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,7 +48,10 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
     private GoogleMap mMap;
     private LatLng sydney;
     private ImageView navImg;
-
+    private TextView CarCametv,CarWorkStartedtv,CarWorkCompletedtv,CarWorkPricePaidtv,CarWorkRequestCompletedtv;
+    private SwitchCompat CarCamesv,CarWorkStartedsv,CarWorkCompletedsv,CarWorkPricePaidsv,CarWorkRequestCompletedsv;
+    private String ProcessFlowUpdateText , key;
+    DatabaseReference firebaseprocessflowref = FirebaseDatabase.getInstance().getReference("processFlow/"+(String) ((HashMap) AppData.currentVeh).get("key"));
     public NewOrderDetailFragment() {
     }
 
@@ -131,6 +138,136 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
         locationD.setText((String) ((HashMap) custobj).get("make") + " " + (String) ((HashMap) custobj).get("model"));
         companyD.setText((String) ((HashMap) obj).get("openTime"));
 
+
+
+        CarCametv = (TextView) view.findViewById(R.id.carcamestep);
+        CarWorkStartedtv = (TextView)view.findViewById(R.id.carworkstartedstep);
+        CarWorkCompletedtv = (TextView)view.findViewById(R.id.carworkcompletedstep);
+        CarWorkPricePaidtv = (TextView)view.findViewById(R.id.workpricepaidstep);
+        CarWorkRequestCompletedtv = (TextView)view.findViewById(R.id.workrequestcompletestep);
+
+
+        CarCamesv = (SwitchCompat) view.findViewById(R.id.carcameswitchButton);
+        CarWorkStartedsv = (SwitchCompat) view.findViewById(R.id.carworkstartedswitchButton);
+        CarWorkCompletedsv = (SwitchCompat) view.findViewById(R.id.carworkcompletedswitchButton);
+        CarWorkPricePaidsv = (SwitchCompat) view.findViewById(R.id.carworkpricepaidswitchButton);
+        CarWorkRequestCompletedsv = (SwitchCompat) view.findViewById(R.id.carworkrequestcompleteswitchButton);
+
+        CarCamesv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            if(b)
+            {
+                ProcessFlowUpdateText = CarCametv.getText().toString();
+                key = firebaseprocessflowref.push().getKey();
+                firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
+            }
+
+            }
+        });
+        CarWorkStartedsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    if(CarCamesv.isChecked())
+                    {
+                        ProcessFlowUpdateText = CarWorkStartedtv.getText().toString();
+                        key = firebaseprocessflowref.push().getKey();
+                        firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
+                    }
+                    if(!CarCamesv.isChecked())
+                    {
+                        Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
+                        CarWorkStartedsv.setChecked(false);
+                    }
+
+                }
+            }
+        });
+
+        CarWorkCompletedsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    if(CarCamesv.isChecked() && CarWorkStartedsv.isChecked())
+                        {
+                            ProcessFlowUpdateText = CarWorkCompletedtv.getText().toString();
+                            key = firebaseprocessflowref.push().getKey();
+                            firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
+                        }
+                        if (!CarCamesv.isChecked()) {
+                            Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
+                            CarWorkCompletedsv.setChecked(false);
+
+                        }
+                        if (!CarWorkStartedsv.isChecked()) {
+                            Toast.makeText(getContext(), "Please make sure that Car Came and Work Started are checked before this action.", Toast.LENGTH_SHORT).show();
+                            CarWorkCompletedsv.setChecked(false);
+                        }
+
+                }
+            }
+        });
+
+
+        CarWorkPricePaidsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    if(CarCamesv.isChecked() && CarWorkStartedsv.isChecked() && CarWorkCompletedsv.isChecked())
+                        {
+                            ProcessFlowUpdateText = CarWorkPricePaidtv.getText().toString();
+                            key = firebaseprocessflowref.push().getKey();
+                            firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
+                        }
+                        if (!CarCamesv.isChecked()) {
+                            Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
+                            CarWorkPricePaidsv.setChecked(false);
+                        }
+                        if (!CarWorkStartedsv.isChecked()) {
+                            Toast.makeText(getContext(), "Please make sure that Car Came and Work Started are checked before this action.", Toast.LENGTH_SHORT).show();
+                            CarWorkPricePaidsv.setChecked(false);
+                        }
+                    if (!CarWorkCompletedsv.isChecked()) {
+                        Toast.makeText(getContext(), "Please make sure that Car Came,Work Started and Completed are checked before this action.", Toast.LENGTH_SHORT).show();
+                        CarWorkPricePaidsv.setChecked(false);
+                    }
+
+                }
+            }
+        });
+        CarWorkRequestCompletedsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    if(CarCamesv.isChecked() && CarWorkStartedsv.isChecked() && CarWorkCompletedsv.isChecked() && CarWorkPricePaidsv.isChecked())
+                    {
+                        ProcessFlowUpdateText = CarWorkRequestCompletedtv.getText().toString();
+                        key = firebaseprocessflowref.push().getKey();
+                        firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
+                    }
+                    if (!CarCamesv.isChecked()) {
+                        Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
+                        CarWorkPricePaidsv.setChecked(false);
+                    }
+                    if (!CarWorkStartedsv.isChecked()) {
+                        Toast.makeText(getContext(), "Please make sure that Car Came and Work Started are checked before this action.", Toast.LENGTH_SHORT).show();
+                        CarWorkPricePaidsv.setChecked(false);
+                    }
+                    if (!CarWorkCompletedsv.isChecked()) {
+                        Toast.makeText(getContext(), "Please make sure that Car Came,Work Started and Completed are checked before this action.", Toast.LENGTH_SHORT).show();
+                        CarWorkPricePaidsv.setChecked(false);
+                    }
+                    if (!CarWorkPricePaidsv.isChecked()) {
+                            Toast.makeText(getContext(), "Please make sure that Car Came,Work Started,Completed & Paid are checked before this action.", Toast.LENGTH_SHORT).show();
+                            CarWorkPricePaidsv.setChecked(false);
+
+                    }
+
+                }
+            }
+        });
+
 //        Date d = new Date();
 //        d.setDate(Integer.parseInt((String) ((HashMap) obj).get("approxDate")));
 //        int mon = 0;
@@ -200,4 +337,6 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 14));
         }
     }
+
+
 }

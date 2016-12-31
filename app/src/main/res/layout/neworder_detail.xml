@@ -181,5 +181,167 @@
             android:layout_marginEnd="35dp"
             android:layout_marginRight="35dp"
             android:src="@drawable/icon_navi" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/car_service_steps"
+            android:orientation="vertical"
+            android:layout_below="@id/map">
+        <LinearLayout
+            android:id="@+id/carcame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/carcamestep"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="90"
+                android:alpha="0.92"
+                android:text="Car came to Service Center."
+                android:textSize="15dp" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/carcameswitchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_weight="10"
+                android:checked="false"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/carworkstarted"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/carworkstartedstep"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_weight="90"
+                    android:alpha="0.92"
+                    android:text="Work on your car has started."
+                    android:textSize="15dp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/carworkstartedswitchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="10"
+                    android:checked="false"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/carworkcompleted"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/carworkcompletedstep"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_weight="90"
+                    android:alpha="0.92"
+                    android:text="Work on your car has completed."
+                    android:textSize="15dp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/carworkcompletedswitchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="10"
+                    android:checked="false"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/carworkpricepaid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/workpricepaidstep"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_weight="90"
+                    android:alpha="0.92"
+                    android:text="Customer paid."
+                    android:textSize="15dp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/carworkpricepaidswitchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="10"
+                    android:checked="false"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/carworkrequestcomplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/workrequestcompletestep"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_weight="90"
+                    android:alpha="0.92"
+                    android:text="Work is completed,please take your car from service center."
+                    android:textSize="15dp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/carworkrequestcompleteswitchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="10"
+                    android:checked="false"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 </com.ccec.dexterservice.managers.CustomScrollView>
