@@ -6,54 +6,55 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ccec.dexterservice.managers.AppData;
+import com.ccec.dexterservice.managers.QueryviewAdapter;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.LocationCallback;
-import com.google.android.gms.drive.internal.StringListResponse;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallback {
+public class NewOrderDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
     private TextView location, contact, name, company;
-    private TextView locationD, contactD, nameD, companyD;
+    private TextView locationD, contactD, nameD, companyD, locMoreD, carMoreD;
     private Object obj;
     private LinearLayout lin;
     private Object custobj;
     private GoogleMap mMap;
     private LatLng sydney;
     private ImageView navImg;
-    private TextView CarCametv,CarWorkStartedtv,CarWorkCompletedtv,CarWorkPricePaidtv,CarWorkRequestCompletedtv;
-    private SwitchCompat CarCamesv,CarWorkStartedsv,CarWorkCompletedsv,CarWorkPricePaidsv,CarWorkRequestCompletedsv;
-    private String ProcessFlowUpdateText , key;
-    DatabaseReference firebaseprocessflowref = FirebaseDatabase.getInstance().getReference("processFlow/"+(String) ((HashMap) AppData.currentVeh).get("key"));
-    public NewOrderDetailFragment() {
-    }
+    private TextView CarCametv, CarWorkStartedtv, CarWorkCompletedtv, CarWorkPricePaidtv, CarWorkRequestCompletedtv;
+    private SwitchCompat CarCamesv, CarWorkStartedsv, CarWorkCompletedsv, CarWorkPricePaidsv, CarWorkRequestCompletedsv;
+    private String ProcessFlowUpdateText, key;
+    private DatabaseReference firebaseprocessflowref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,8 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
 
             appBarLayout.setTitle((String) ((HashMap) obj).get("key"));
         }
+
+        firebaseprocessflowref = FirebaseDatabase.getInstance().getReference("processFlow/" + (String) ((HashMap) AppData.currentVeh).get("key"));
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire");
         GeoFire geoFire = new GeoFire(ref);
@@ -93,12 +96,25 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.neworder_detail, container, false);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().
-                findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        name = (TextView) view.findViewById(R.id.fullNameTitle);
+        location = (TextView) view.findViewById(R.id.skypeNameTitle);
+        company = (TextView) view.findViewById(R.id.companyNameTitle);
 
-        navImg = (ImageView) view.findViewById(R.id.navigate);
-        navImg.setOnClickListener(new View.OnClickListener() {
+        nameD = (TextView) view.findViewById(R.id.fullNameDetail);
+        locationD = (TextView) view.findViewById(R.id.skypeNameDetail);
+        companyD = (TextView) view.findViewById(R.id.companyNameDetail);
+
+        locMoreD = (TextView) view.findViewById(R.id.fullNameMore);
+        SpannableString content = new SpannableString(locMoreD.getText());
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        locMoreD.setText(content);
+
+        carMoreD = (TextView) view.findViewById(R.id.skypeNameMore);
+        SpannableString content2 = new SpannableString(carMoreD.getText());
+        content2.setSpan(new UnderlineSpan(), 0, content2.length(), 0);
+        carMoreD.setText(content2);
+
+        locMoreD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_VIEW,
@@ -107,15 +123,21 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
             }
         });
 
-        name = (TextView) view.findViewById(R.id.fullNameTitle);
-        location = (TextView) view.findViewById(R.id.skypeNameTitle);
-        company = (TextView) view.findViewById(R.id.companyNameTitle);
-//        contact = (TextView) view.findViewById(R.id.contactNameTitle);
+        carMoreD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //show details in dialog
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                final View dialoglayout = inflater.inflate(R.layout.custom_show_cardetails, null);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setCancelable(true);
+                builder.setView(dialoglayout);
 
-        nameD = (TextView) view.findViewById(R.id.fullNameDetail);
-        locationD = (TextView) view.findViewById(R.id.skypeNameDetail);
-        companyD = (TextView) view.findViewById(R.id.companyNameDetail);
-//        contactD = (TextView) view.findViewById(R.id.contactNameDetail);
+
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
 
         lin = (LinearLayout) view.findViewById(R.id.linProf11);
 
@@ -138,14 +160,11 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
         locationD.setText((String) ((HashMap) custobj).get("make") + " " + (String) ((HashMap) custobj).get("model"));
         companyD.setText((String) ((HashMap) obj).get("openTime"));
 
-
-
         CarCametv = (TextView) view.findViewById(R.id.carcamestep);
-        CarWorkStartedtv = (TextView)view.findViewById(R.id.carworkstartedstep);
-        CarWorkCompletedtv = (TextView)view.findViewById(R.id.carworkcompletedstep);
-        CarWorkPricePaidtv = (TextView)view.findViewById(R.id.workpricepaidstep);
-        CarWorkRequestCompletedtv = (TextView)view.findViewById(R.id.workrequestcompletestep);
-
+        CarWorkStartedtv = (TextView) view.findViewById(R.id.carworkstartedstep);
+        CarWorkCompletedtv = (TextView) view.findViewById(R.id.carworkcompletedstep);
+        CarWorkPricePaidtv = (TextView) view.findViewById(R.id.workpricepaidstep);
+        CarWorkRequestCompletedtv = (TextView) view.findViewById(R.id.workrequestcompletestep);
 
         CarCamesv = (SwitchCompat) view.findViewById(R.id.carcameswitchButton);
         CarWorkStartedsv = (SwitchCompat) view.findViewById(R.id.carworkstartedswitchButton);
@@ -156,12 +175,11 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
         CarCamesv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-            if(b)
-            {
-                ProcessFlowUpdateText = CarCametv.getText().toString();
-                key = firebaseprocessflowref.push().getKey();
-                firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
-            }
+                if (b) {
+                    ProcessFlowUpdateText = CarCametv.getText().toString();
+                    key = firebaseprocessflowref.push().getKey();
+                    firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
+                }
 
             }
         });
@@ -169,14 +187,12 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    if(CarCamesv.isChecked())
-                    {
+                    if (CarCamesv.isChecked()) {
                         ProcessFlowUpdateText = CarWorkStartedtv.getText().toString();
                         key = firebaseprocessflowref.push().getKey();
                         firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
                     }
-                    if(!CarCamesv.isChecked())
-                    {
+                    if (!CarCamesv.isChecked()) {
                         Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
                         CarWorkStartedsv.setChecked(false);
                     }
@@ -189,21 +205,20 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    if(CarCamesv.isChecked() && CarWorkStartedsv.isChecked())
-                        {
-                            ProcessFlowUpdateText = CarWorkCompletedtv.getText().toString();
-                            key = firebaseprocessflowref.push().getKey();
-                            firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
-                        }
-                        if (!CarCamesv.isChecked()) {
-                            Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
-                            CarWorkCompletedsv.setChecked(false);
+                    if (CarCamesv.isChecked() && CarWorkStartedsv.isChecked()) {
+                        ProcessFlowUpdateText = CarWorkCompletedtv.getText().toString();
+                        key = firebaseprocessflowref.push().getKey();
+                        firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
+                    }
+                    if (!CarCamesv.isChecked()) {
+                        Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
+                        CarWorkCompletedsv.setChecked(false);
 
-                        }
-                        if (!CarWorkStartedsv.isChecked()) {
-                            Toast.makeText(getContext(), "Please make sure that Car Came and Work Started are checked before this action.", Toast.LENGTH_SHORT).show();
-                            CarWorkCompletedsv.setChecked(false);
-                        }
+                    }
+                    if (!CarWorkStartedsv.isChecked()) {
+                        Toast.makeText(getContext(), "Please make sure that Car Came and Work Started are checked before this action.", Toast.LENGTH_SHORT).show();
+                        CarWorkCompletedsv.setChecked(false);
+                    }
 
                 }
             }
@@ -214,20 +229,19 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    if(CarCamesv.isChecked() && CarWorkStartedsv.isChecked() && CarWorkCompletedsv.isChecked())
-                        {
-                            ProcessFlowUpdateText = CarWorkPricePaidtv.getText().toString();
-                            key = firebaseprocessflowref.push().getKey();
-                            firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
-                        }
-                        if (!CarCamesv.isChecked()) {
-                            Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
-                            CarWorkPricePaidsv.setChecked(false);
-                        }
-                        if (!CarWorkStartedsv.isChecked()) {
-                            Toast.makeText(getContext(), "Please make sure that Car Came and Work Started are checked before this action.", Toast.LENGTH_SHORT).show();
-                            CarWorkPricePaidsv.setChecked(false);
-                        }
+                    if (CarCamesv.isChecked() && CarWorkStartedsv.isChecked() && CarWorkCompletedsv.isChecked()) {
+                        ProcessFlowUpdateText = CarWorkPricePaidtv.getText().toString();
+                        key = firebaseprocessflowref.push().getKey();
+                        firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
+                    }
+                    if (!CarCamesv.isChecked()) {
+                        Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
+                        CarWorkPricePaidsv.setChecked(false);
+                    }
+                    if (!CarWorkStartedsv.isChecked()) {
+                        Toast.makeText(getContext(), "Please make sure that Car Came and Work Started are checked before this action.", Toast.LENGTH_SHORT).show();
+                        CarWorkPricePaidsv.setChecked(false);
+                    }
                     if (!CarWorkCompletedsv.isChecked()) {
                         Toast.makeText(getContext(), "Please make sure that Car Came,Work Started and Completed are checked before this action.", Toast.LENGTH_SHORT).show();
                         CarWorkPricePaidsv.setChecked(false);
@@ -240,8 +254,7 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    if(CarCamesv.isChecked() && CarWorkStartedsv.isChecked() && CarWorkCompletedsv.isChecked() && CarWorkPricePaidsv.isChecked())
-                    {
+                    if (CarCamesv.isChecked() && CarWorkStartedsv.isChecked() && CarWorkCompletedsv.isChecked() && CarWorkPricePaidsv.isChecked()) {
                         ProcessFlowUpdateText = CarWorkRequestCompletedtv.getText().toString();
                         key = firebaseprocessflowref.push().getKey();
                         firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
@@ -259,14 +272,54 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
                         CarWorkPricePaidsv.setChecked(false);
                     }
                     if (!CarWorkPricePaidsv.isChecked()) {
-                            Toast.makeText(getContext(), "Please make sure that Car Came,Work Started,Completed & Paid are checked before this action.", Toast.LENGTH_SHORT).show();
-                            CarWorkPricePaidsv.setChecked(false);
+                        Toast.makeText(getContext(), "Please make sure that Car Came,Work Started,Completed & Paid are checked before this action.", Toast.LENGTH_SHORT).show();
+                        CarWorkPricePaidsv.setChecked(false);
 
                     }
 
                 }
             }
         });
+
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.queriesList);
+        final LinearLayout lrecyclerView = (LinearLayout) view.findViewById(R.id.queries_steps);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+
+        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("queries");
+        databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    try {
+                        List<String> itemMap = (ArrayList) dataSnapshot.getValue();
+                        String temp = (String) ((HashMap) AppData.currentVeh).get("queries");
+
+                        ArrayList<String> itemMap2 = new ArrayList<String>();
+                        for (int i = 0; i < itemMap.size(); i++) {
+                            if (temp.charAt(i) == '1')
+                                itemMap2.add(itemMap.get(i));
+                        }
+
+                        if (itemMap2.size() > 0) {
+                            RecyclerView.Adapter adapter = new QueryviewAdapter(itemMap2);
+                            recyclerView.setAdapter(adapter);
+                        } else
+                            lrecyclerView.setVisibility(View.GONE);
+                    } catch (Exception e) {
+                        lrecyclerView.setVisibility(View.GONE);
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        databaseReference2.keepSynced(true);
 
 //        Date d = new Date();
 //        d.setDate(Integer.parseInt((String) ((HashMap) obj).get("approxDate")));
@@ -327,16 +380,4 @@ public class NewOrderDetailFragment extends Fragment implements OnMapReadyCallba
 
         return view;
     }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        if (sydney != null) {
-            mMap.addMarker(new MarkerOptions().position(sydney).title(("User location"))).showInfoWindow();
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 14));
-        }
-    }
-
-
 }
