@@ -67,8 +67,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
         holder.requestID.setText((String) requestMap.get("key"));
         holder.areaModel.setText((String) itemMap.get("make") + " " + (String) itemMap.get("model"));
-        holder.openTime.setText((String) requestMap.get("openTime"));
-        holder.scheduledTime.setText((String) requestMap.get("scheduleTime"));
+        if (AppData.currentStatus == "Accepted")
+            holder.scheduledTime.setText("Scheduled on: " + (String) requestMap.get("scheduleTime"));
+        else if (AppData.currentStatus == "Completed")
+            holder.scheduledTime.setText("Processed on: " + (String) requestMap.get("scheduleTime"));
+        else
+            holder.scheduledTime.setText("Placed on: " + (String) requestMap.get("openTime"));
 
         img = holder.RVCircle;
         String temp = (String) requestMap.get("item");
@@ -79,46 +83,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         holder.openTime.setTypeface(FontsManager.getRegularTypeface(context));
         holder.scheduledTime.setTypeface(FontsManager.getRegularTypeface(context));
 
+        holder.openTime.setText("Fetching name..");
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/Customer/" + (String) requestMap.get("issuedBy"));
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> itemMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                holder.openTime.setText("Raised by: " + (String) itemMap.get("name"));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         if (((String) requestMap.get("status")).equals("Accepted")) {
-            holder.openTime.setText("Fetching name..");
-
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/Customer/" + (String) requestMap.get("issuedBy"));
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Map<String, Object> itemMap = (HashMap<String, Object>) dataSnapshot.getValue();
-                    holder.openTime.setText("Raised by: " + (String) itemMap.get("name"));
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
             holder.accept.setVisibility(View.INVISIBLE);
             holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
         } else if (((String) requestMap.get("status")).equals("Completed")) {
             holder.accept.setVisibility(View.INVISIBLE);
             holder.chat.setVisibility(View.INVISIBLE);
         } else {
-            holder.openTime.setText("Fetching name..");
-
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/Customer/" + (String) requestMap.get("issuedBy"));
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Map<String, Object> itemMap = (HashMap<String, Object>) dataSnapshot.getValue();
-                    holder.openTime.setText("Raised by: " + (String) itemMap.get("name"));
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-            holder.scheduledTime.setText((String) requestMap.get("openTime"));
             holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
             holder.accept.setTypeface(FontsManager.getRegularTypeface(context));
         }

@@ -46,7 +46,7 @@
         android:layout_below="@+id/cardetailll1"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:weightSum="100">
 
@@ -83,7 +83,7 @@
         android:layout_below="@+id/cardetailll2"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:weightSum="100">
 
@@ -121,7 +121,7 @@
         android:layout_below="@+id/cardetailll3"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:weightSum="100">
 
@@ -158,7 +158,7 @@
         android:layout_below="@+id/cardetailll4"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:weightSum="100">
 
@@ -195,7 +195,7 @@
         android:layout_below="@+id/cardetailll5"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:weightSum="100">
 
@@ -232,7 +232,7 @@
         android:layout_below="@+id/cardetailll6"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:weightSum="100">
 
@@ -269,7 +269,7 @@
         android:layout_below="@+id/cardetailll7"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:weightSum="100">
 
@@ -306,7 +306,7 @@
         android:layout_below="@+id/cardetailll8"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:weightSum="100">
 
@@ -344,7 +344,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:weightSum="100">
 

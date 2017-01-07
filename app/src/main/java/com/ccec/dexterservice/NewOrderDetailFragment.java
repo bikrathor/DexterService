@@ -10,6 +10,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -30,6 +31,7 @@ import com.ccec.dexterservice.entities.FlowRecord;
 import com.ccec.dexterservice.entities.Notif;
 import com.ccec.dexterservice.entities.Requests;
 import com.ccec.dexterservice.managers.AppData;
+import com.ccec.dexterservice.managers.ProcessFlowViewAdapter;
 import com.ccec.dexterservice.managers.QueryviewAdapter;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -65,7 +67,11 @@ public class NewOrderDetailFragment extends Fragment {
     private DatabaseReference firebaseprocessflowref;
     private boolean sCheckable = true;
     private android.app.AlertDialog.Builder builder;
-    private TextView CarMake, CarModel, CarManufacturingYear, CarRegNumber, CarChessisNumber, CarKilometer, CarPollutionChkDt, CarNxtPollutionChkDt, CarInsurancePurchaseDt, CarNxtInsurancePurchaseDt;
+    private TextView CarMake, CarModel, CarManufacturingYear, CarRegNumber, CarChessisNumber, CarKilometer, CarPollutionChkDt, CarNxtPollutionChkDt, CarInsurancePurchaseDt, CarNxtInsurancePurchaseDt, company1, companyD1;
+    private View linview1;
+    private LinearLayout lincompany1;
+    private LinearLayoutManager linearLayoutManagerProcess;
+    private RecyclerView processList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,10 +116,15 @@ public class NewOrderDetailFragment extends Fragment {
         name = (TextView) view.findViewById(R.id.fullNameTitle);
         location = (TextView) view.findViewById(R.id.skypeNameTitle);
         company = (TextView) view.findViewById(R.id.companyNameTitle);
+        company1 = (TextView) view.findViewById(R.id.companyNameTitle1);
 
         nameD = (TextView) view.findViewById(R.id.fullNameDetail);
         locationD = (TextView) view.findViewById(R.id.skypeNameDetail);
         companyD = (TextView) view.findViewById(R.id.companyNameDetail);
+        companyD1 = (TextView) view.findViewById(R.id.companyNameDetail1);
+
+        lincompany1 = (LinearLayout) view.findViewById(R.id.linProf11111);
+        linview1 = (View) view.findViewById(R.id.viewne);
 
         locMoreD = (TextView) view.findViewById(R.id.fullNameMore);
         SpannableString content = new SpannableString(locMoreD.getText());
@@ -124,6 +135,14 @@ public class NewOrderDetailFragment extends Fragment {
         SpannableString content2 = new SpannableString(carMoreD.getText());
         content2.setSpan(new UnderlineSpan(), 0, content2.length(), 0);
         carMoreD.setText(content2);
+
+        if (AppData.currentStatus == "Accepted" || AppData.currentStatus == "Completed") {
+            if (AppData.currentStatus == "Completed")
+                company1.setText("Completed on: ");
+            linview1.setVisibility(View.VISIBLE);
+            lincompany1.setVisibility(View.VISIBLE);
+            companyD1.setText((String) ((HashMap) obj).get("scheduleTime"));
+        }
 
         locMoreD.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +156,6 @@ public class NewOrderDetailFragment extends Fragment {
         carMoreD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //show details in dialog
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 final View dialoglayout = inflater.inflate(R.layout.custom_show_cardetails, null);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -149,7 +167,7 @@ public class NewOrderDetailFragment extends Fragment {
                 CarManufacturingYear = (TextView) dialoglayout.findViewById(R.id.car_manufactured_tv);
                 CarRegNumber = (TextView) dialoglayout.findViewById(R.id.car_regnum_tv);
                 CarChessisNumber = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tv);
-                CarKilometer = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tv);
+                CarKilometer = (TextView) dialoglayout.findViewById(R.id.car_kilometer_tv);
                 CarPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollution_tv);
                 CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tv);
                 CarInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedt_tv);
@@ -478,6 +496,10 @@ public class NewOrderDetailFragment extends Fragment {
             });
             firebasedbrefproducts.keepSynced(true);
         } else {
+            if (AppData.currentStatus == "Completed") {
+                CardView cardView = (CardView) view.findViewById(R.id.card_view);
+                cardView.setVisibility(View.GONE);
+            }
             CarCamesv.setClickable(false);
             CarWorkStartedsv.setClickable(false);
             CarWorkCompletedsv.setClickable(false);
@@ -525,62 +547,44 @@ public class NewOrderDetailFragment extends Fragment {
         });
         databaseReference2.keepSynced(true);
 
-//        Date d = new Date();
-//        d.setDate(Integer.parseInt((String) ((HashMap) obj).get("approxDate")));
-//        int mon = 0;
-//        switch ((String) ((HashMap) obj).get("approxMonth")) {
-//            case "Jan":
-//                mon = 0;
-//                break;
-//            case "Feb":
-//                mon = 1;
-//                break;
-//            case "Mar":
-//                mon = 2;
-//                break;
-//            case "Apr":
-//                mon = 3;
-//                break;
-//            case "May":
-//                mon = 4;
-//                break;
-//            case "Jun":
-//                mon = 5;
-//                break;
-//            case "Jul":
-//                mon = 6;
-//                break;
-//            case "Aug":
-//                mon = 7;
-//                break;
-//            case "Sep":
-//                mon = 8;
-//                break;
-//            case "Oct":
-//                mon = 9;
-//                break;
-//            case "Nov":
-//                mon = 10;
-//                break;
-//            case "Dec":
-//                mon = 11;
-//                break;
-//        }
-//        d.setMonth(mon);
-//
-//        SimpleDateFormat format = new SimpleDateFormat("d");
-//        String date = format.format(d);
-//        if (date.endsWith("1") && !date.endsWith("11"))
-//            format = new SimpleDateFormat("EE MMM d'st', yyyy");
-//        else if (date.endsWith("2") && !date.endsWith("12"))
-//            format = new SimpleDateFormat("EE MMM d'nd', yyyy");
-//        else if (date.endsWith("3") && !date.endsWith("13"))
-//            format = new SimpleDateFormat("EE MMM d'rd', yyyy");
-//        else
-//            format = new SimpleDateFormat("EE MMM d'th', yyyy");
-//        String yourDate = format.format(d);
-//
-//        contactD.setText(yourDate);
+        final CardView cardProcessList = (CardView) view.findViewById(R.id.card_view4);
+        if (AppData.currentStatus == "Open")
+            cardProcessList.setVisibility(View.GONE);
+        else {
+            processList = (RecyclerView) view.findViewById(R.id.processList);
+            linearLayoutManagerProcess = new LinearLayoutManager(getActivity());
+            processList.setLayoutManager(linearLayoutManagerProcess);
+
+            databaseReference = FirebaseDatabase.getInstance().getReference("/processFlow/" + (String) ((HashMap) obj).get("key"));
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getChildrenCount() > 0) {
+                        List<FlowRecord> list = new ArrayList<>();
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            try {
+                                Map<String, Object> itemMap = (HashMap<String, Object>) postSnapshot.getValue();
+                                FlowRecord f = new FlowRecord();
+                                f.setTitle((String) itemMap.get("title"));
+                                f.setTimestamp((String) itemMap.get("timestamp"));
+                                list.add(f);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        ProcessFlowViewAdapter recyclerViewAdapter = new ProcessFlowViewAdapter(getActivity(), list);
+                        processList.setAdapter(recyclerViewAdapter);
+                    } else
+                        cardProcessList.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+            databaseReference.keepSynced(true);
+        }
 
         return view;
     }

@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -26,10 +28,7 @@ import android.widget.Toast;
 
 import com.ccec.dexterservice.R;
 import com.ccec.dexterservice.managers.AppData;
-import com.ccec.dexterservice.managers.FontsManager;
 import com.ccec.dexterservice.managers.UserSessionManager;
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -46,8 +45,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -89,8 +86,6 @@ public class UpdateMe extends FragmentActivity implements OnMapReadyCallback {
         img = (ImageView) findViewById(R.id.imageView);
         enterLoc = (EditText) findViewById(R.id.input_location);
         searchLoc = (TextView) findViewById(R.id.textSearch);
-        enterLoc.setTypeface(FontsManager.getRegularTypeface(getApplicationContext()));
-        searchLoc.setTypeface(FontsManager.getRegularTypeface(getApplicationContext()));
 
         mapFragment.getMapAsync(this);
 
@@ -129,9 +124,28 @@ public class UpdateMe extends FragmentActivity implements OnMapReadyCallback {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AppData.selectedLoc = enterLoc.getText().toString();
-                AppData.selectedCordLoc = location;
-                UpdateMe.this.finish();
+                if (!enterLoc.getText().toString().equals("") || !enterLoc.getText().toString().equals("My location")) {
+                    AppData.selectedLoc = enterLoc.getText().toString();
+                }
+                if (enterLoc.getText().toString().equals("My location")) {
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(UpdateMe.this);
+                    builder.setTitle("Location not found!");
+                    builder.setMessage("Please input your location in the box above.");
+                    builder.setCancelable(true);
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    android.app.AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                } else if (!enterLoc.getText().toString().equals("")) {
+                    AppData.selectedCordLoc = location;
+                    UpdateMe.this.finish();
+                }
             }
         });
     }
@@ -188,6 +202,7 @@ public class UpdateMe extends FragmentActivity implements OnMapReadyCallback {
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                     Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(myIntent);
+                    UpdateMe.this.finish();
                 }
             });
             dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -205,13 +220,14 @@ public class UpdateMe extends FragmentActivity implements OnMapReadyCallback {
 
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(UpdateMe.this, "Make sure location is on.", Toast.LENGTH_LONG).show();
 
             return;
         }
 
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new android.location.LocationListener() {
+        String provider = mLocationManager.getBestProvider(new Criteria(), true);
+        mLocationManager.requestLocationUpdates(provider, 0, 0, new android.location.LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
 
@@ -235,10 +251,24 @@ public class UpdateMe extends FragmentActivity implements OnMapReadyCallback {
 
         if (gps_enabled != false) {
             location = mLocationManager
-                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            if (location!=null) {
-                getCurrentName();
+                    .getLastKnownLocation(provider);
+            if (location == null) {
+                location = mLocationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (location == null) {
+                    location = mLocationManager
+                            .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if (location != null) {
+                        updateMyLocation(googleMap, location);
+                        new PostData().execute();
+                    }
+                } else {
+                    updateMyLocation(googleMap, location);
+                    new PostData().execute();
+                }
+            } else {
                 updateMyLocation(googleMap, location);
+                new PostData().execute();
             }
         }
 
@@ -249,31 +279,101 @@ public class UpdateMe extends FragmentActivity implements OnMapReadyCallback {
                 if (ActivityCompat.checkSelfPermission(UpdateMe.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(UpdateMe.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
+                String provider = mLocationManager.getBestProvider(new Criteria(), true);
                 location = mLocationManager
-                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        .getLastKnownLocation(provider);
 
-                updateMyLocation(googleMap, location);
-
-                if (result != null)
-                    enterLoc.setText(result);
-                else
-                    enterLoc.setText("My location");
+                if (location == null) {
+                    location = mLocationManager
+                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    if (location == null) {
+                        location = mLocationManager
+                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (location != null) {
+                            updateMyLocation(googleMap, location);
+                            new PostData().execute();
+                        }
+                    } else {
+                        updateMyLocation(googleMap, location);
+                        new PostData().execute();
+                    }
+                } else {
+                    updateMyLocation(googleMap, location);
+                    new PostData().execute();
+                }
             }
         });
+
+        img.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                img.performClick();
+            }
+        }, 4000);
+
+        img.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                img.performClick();
+            }
+        }, 8000);
+    }
+
+    class PostData extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(String... args) {
+            getCurrentName();
+            return null;
+        }
+
+        protected void onPostExecute(String file_url) {
+            if (result != null)
+                enterLoc.setText(result);
+//            else if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                return;
+//            }
+//
+//            String provider = mLocationManager.getBestProvider(new Criteria(), true);
+//            location = mLocationManager
+//                    .getLastKnownLocation(provider);
+//            if (location != null) {
+//                new PostData().execute();
+//            }
+        }
     }
 
     private void getCurrentName() {
-        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-
         List<Address> addressList = null;
-        try {
-            addressList = geocoder.getFromLocation(
-                    location.getLatitude(), location.getLongitude(), 1);
-        } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
+        List<String> providerList = mLocationManager.getAllProviders();
+        if (null != location && null != providerList && providerList.size() > 0) {
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+
+            Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+            try {
+                if (location != null)
+                    addressList = geocoder.getFromLocation(
+                            latitude, longitude, 1);
+            } catch (IOException e) {
+                Log.e("errrrrrrrrr", e.getMessage());
+                getName(addressList, geocoder, latitude, longitude);
+            }
+        }
+
+        if (place != null)
+            sb.append(place.getName()).append("\n");
+
         if (addressList != null && addressList.size() > 0) {
             Address address = addressList.get(0);
-            StringBuilder sb = new StringBuilder();
             if (source.equals("auto"))
                 sb.append(place.getName()).append("\n");
             for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
@@ -282,26 +382,49 @@ public class UpdateMe extends FragmentActivity implements OnMapReadyCallback {
             sb.append(address.getLocality()).append("");
             result = sb.toString();
         }
+    }
 
-        if (result != null)
-            enterLoc.setText(result);
-        else
-            enterLoc.setText("My location");
+    private List<Address> getName(List<Address> addressList, Geocoder geocoder, double latitude, double longitude) {
+        try {
+            addressList = geocoder.getFromLocation(
+                    latitude, longitude, 1);
+        } catch (IOException e) {
+            Log.e("errrrrrrrrr", e.getMessage());
+            getName(addressList, geocoder, latitude, longitude);
+        }
+
+        return addressList;
     }
 
     private void updateMyLocation(final GoogleMap googleMap, Location location) {
         this.location = location;
 
-        LatLng myLoc = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng myLoc = null;
+        if (location != null) {
+            myLoc = new LatLng(location.getLatitude(), location.getLongitude());
+        }
 
         if (myMarker == null)
-            myMarker = mMap.addMarker(new MarkerOptions().position(myLoc).
-                    title("My location")
-                    .icon(getMarkerIcon("#8b3e58")));
-        else
-            myMarker.setPosition(myLoc);
+            try {
+                myMarker = mMap.addMarker(new MarkerOptions().position(myLoc).
+                        title("My location")
+                        .icon(getMarkerIcon("#8b3e58")));
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        else {
+            try {
+                myMarker.setPosition(myLoc);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 16));
+        try {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 16));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public BitmapDescriptor getMarkerIcon(String color) {

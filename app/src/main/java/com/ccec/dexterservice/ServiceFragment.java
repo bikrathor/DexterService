@@ -34,6 +34,7 @@ import com.ccec.dexterservice.managers.AppData;
 import com.ccec.dexterservice.managers.FontsManager;
 import com.ccec.dexterservice.managers.RecyclerViewAdapter;
 import com.ccec.dexterservice.managers.UserSessionManager;
+import com.google.android.gms.fitness.request.DataDeleteRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -68,7 +69,7 @@ public class ServiceFragment extends Fragment {
     private Spinner spinnerLoc;
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener date;
-    private String dayFire, monthFire;
+    private String dayFire, monthFire, yearFire;
     private Button subButton, calButton;
 
     @Override
@@ -206,6 +207,8 @@ public class ServiceFragment extends Fragment {
         dayFire = format.format(myCalendar.getTime());
         format = new SimpleDateFormat("MMM");
         monthFire = format.format(myCalendar.getTime());
+        format = new SimpleDateFormat("yyyy");
+        yearFire = format.format(myCalendar.getTime());
 
         calButton.setText(yourDate);
         subButton.setVisibility(View.VISIBLE);
@@ -252,23 +255,65 @@ public class ServiceFragment extends Fragment {
                 pDialog.show();
 
                 SimpleDateFormat format = new SimpleDateFormat("d");
-                String date = format.format(new Date());
+                Date da = new Date();
+                da.setDate(Integer.parseInt(dayFire));
+                int mon = 0;
+                switch (monthFire) {
+                    case "Jan":
+                        mon = 0;
+                        break;
+                    case "Feb":
+                        mon = 1;
+                        break;
+                    case "Mar":
+                        mon = 2;
+                        break;
+                    case "Apr":
+                        mon = 3;
+                        break;
+                    case "May":
+                        mon = 4;
+                        break;
+                    case "Jun":
+                        mon = 5;
+                        break;
+                    case "Jul":
+                        mon = 6;
+                        break;
+                    case "Aug":
+                        mon = 7;
+                        break;
+                    case "Sep":
+                        mon = 8;
+                        break;
+                    case "Oct":
+                        mon = 9;
+                        break;
+                    case "Nov":
+                        mon = 10;
+                        break;
+                    case "Dec":
+                        mon = 11;
+                        break;
+                }
+                da.setMonth(mon);
+                String date = format.format(da);
                 if (date.endsWith("1") && !date.endsWith("11"))
-                    format = new SimpleDateFormat("EE MMM d'st', yyyy");
+                    format = new SimpleDateFormat("EE, MMM d'st'");
                 else if (date.endsWith("2") && !date.endsWith("12"))
-                    format = new SimpleDateFormat("EE MMM d'nd', yyyy");
+                    format = new SimpleDateFormat("EE, MMM d'nd'");
                 else if (date.endsWith("3") && !date.endsWith("13"))
-                    format = new SimpleDateFormat("EE MMM d'rd', yyyy");
+                    format = new SimpleDateFormat("EE, MMM d'rd'");
                 else
-                    format = new SimpleDateFormat("EE MMM d'th', yyyy");
-                final String yourDate = format.format(new Date());
+                    format = new SimpleDateFormat("EE, MMM d'th'");
+                final String yourDate = format.format(da);
 
                 final DatabaseReference firebasedbref = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
                 firebasedbref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Requests requests = dataSnapshot.getValue(Requests.class);
-                        requests.setScheduleTime(dayFire + " " + monthFire);
+                        requests.setScheduleTime(yourDate);
                         requests.setStatus("Accepted");
 
                         DatabaseReference firebasedbref2 = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
