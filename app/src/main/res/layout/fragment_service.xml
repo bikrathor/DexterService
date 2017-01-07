@@ -4,58 +4,9 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="7dp"
-        android:paddingTop="10dp">
-
-        <TextView
-            android:id="@+id/textStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/spinLay"
-            android:text="Status -"
-            android:textSize="16dp" />
-
-        <RelativeLayout
-            android:id="@+id/spinLay"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
-
-            <Spinner
-                android:id="@+id/statusSpinner"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/back_spinner"
-                android:padding="4dp"></Spinner>
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignEnd="@+id/statusSpinner"
-                android:layout_alignRight="@+id/statusSpinner"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_marginRight="3dp"
-                android:onClick="showDropDown"
-                android:src="@drawable/icon_down" />
-        </RelativeLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/errorSec"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/header"
         android:visibility="invisible">
 
         <ImageView

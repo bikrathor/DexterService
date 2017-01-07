@@ -146,6 +146,13 @@ public class NewOrderDetail extends AppCompatActivity {
         return cm.getActiveNetworkInfo() != null;
     }
 
+    public void goBack() {
+        Intent intent = new Intent(NewOrderDetail.this, HomePage.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

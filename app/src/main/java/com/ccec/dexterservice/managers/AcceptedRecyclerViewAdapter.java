@@ -2,17 +2,18 @@ package com.ccec.dexterservice.managers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.ccec.dexterservice.NewOrderDetail;
+import com.ccec.dexterservice.OpenFragment;
 import com.ccec.dexterservice.R;
-import com.ccec.dexterservice.ServiceFragment;
 import com.ccec.dexterservice.entities.RequestRow;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,19 +31,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
+public class AcceptedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
     private List<RequestRow> requestRow;
     protected Context context;
-    private ServiceFragment fragment;
+    private OpenFragment fragment;
     private CircularImageView img;
-    private Spinner sp;
     private int pos;
 
-    public RecyclerViewAdapter(Context context, List<RequestRow> requestRow, ServiceFragment fragment, Spinner sp) {
+    public AcceptedRecyclerViewAdapter(Context context, List<RequestRow> requestRow, OpenFragment fragment) {
         this.requestRow = requestRow;
         this.context = context;
         this.fragment = fragment;
-        this.sp = sp;
     }
 
     @Override
@@ -51,11 +50,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_service_row, parent, false);
         viewHolder = new RecyclerViewHolders(layoutView, requestRow);
 
-        if (AppData.setOne == true) {
-            fragment.selectSpinnerItemByValue(sp, 0);
-            AppData.setOne = false;
-        }
-        fragment.stopLoading();
+        if (fragment != null)
+            fragment.stopLoading();
 
         return viewHolder;
     }
@@ -67,12 +63,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
         holder.requestID.setText((String) requestMap.get("key"));
         holder.areaModel.setText((String) itemMap.get("make") + " " + (String) itemMap.get("model"));
-        if (AppData.currentStatus == "Accepted")
-            holder.scheduledTime.setText("Scheduled on: " + (String) requestMap.get("scheduleTime"));
-        else if (AppData.currentStatus == "Completed")
-            holder.scheduledTime.setText("Processed on: " + (String) requestMap.get("scheduleTime"));
-        else
-            holder.scheduledTime.setText("Placed on: " + (String) requestMap.get("openTime"));
+        holder.scheduledTime.setText("Scheduled on: " + (String) requestMap.get("scheduleTime"));
 
         img = holder.RVCircle;
         String temp = (String) requestMap.get("item");
@@ -99,33 +90,36 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
             }
         });
 
-        if (((String) requestMap.get("status")).equals("Accepted")) {
-            holder.accept.setVisibility(View.INVISIBLE);
-            holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
-        } else if (((String) requestMap.get("status")).equals("Completed")) {
-            holder.accept.setVisibility(View.INVISIBLE);
-            holder.chat.setVisibility(View.INVISIBLE);
-        } else {
-            holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
-            holder.accept.setTypeface(FontsManager.getRegularTypeface(context));
-        }
+        holder.accept.setVisibility(View.INVISIBLE);
+        holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
 
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AppData.currentPath = (String) requestMap.get("key");
-                AppData.currentSelectedUser = (String) requestMap.get("issuedBy");
-                fragment.showInfo();
+                if (isNetwork()) {
+                    AppData.currentPath = (String) requestMap.get("key");
+                    AppData.currentSelectedUser = (String) requestMap.get("issuedBy");
+                    fragment.showInfo();
+                } else
+                    Toast.makeText(context, "Please connect to internet", Toast.LENGTH_SHORT).show();
             }
         });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pos = position;
-                getProductDetails();
+                if (isNetwork()) {
+                    pos = position;
+                    getProductDetails();
+                } else
+                    Toast.makeText(context, "Please connect to internet", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public boolean isNetwork() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     private void setPic(String path, final CircularImageView im) {
@@ -149,6 +143,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
         AppData.currentVeh = requestRow.get(pos).getRequestMap();
         AppData.currentVehCust = requestRow.get(pos).getItemMap();
+        AppData.currentStatus = "Accepted";
 
         context.startActivity(intent);
     }

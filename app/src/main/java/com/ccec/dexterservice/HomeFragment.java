@@ -6,23 +6,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.TextView;
 
+import com.ccec.dexterservice.managers.AppData;
 import com.ccec.dexterservice.managers.FontsManager;
-import com.ccec.dexterservice.managers.UserSessionManager;
-
-import java.util.HashMap;
 
 public class HomeFragment extends Fragment {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    UserSessionManager session;
     private TabLayout tabLayout;
 
     @Override
@@ -32,21 +26,25 @@ public class HomeFragment extends Fragment {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
-        session = new UserSessionManager(getContext());
-        HashMap<String, String> user = session.getUserDetails();
-//        uid = user.get(UserSessionManager.TAG_id);
-//        profilePic = user.get(UserSessionManager.TAG_profilepic);
-//        email = user.get(UserSessionManager.TAG_email);
-
-
         mViewPager = (ViewPager) view.findViewById(R.id.containerHomeTabs);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2);
 
         tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         changeTabsFont();
 
+        if (AppData.selectedTab != 0) {
+            setTab(AppData.selectedTab);
+            AppData.selectedTab = 0;
+        }
+
         return view;
+    }
+
+    private void setTab(int pos) {
+        TabLayout.Tab tab = tabLayout.getTabAt(pos);
+        tab.select();
     }
 
     private void changeTabsFont() {
@@ -65,7 +63,6 @@ public class HomeFragment extends Fragment {
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -74,27 +71,32 @@ public class HomeFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    ServiceFragment fragment = new ServiceFragment();
+                    OpenFragment fragment = new OpenFragment();
                     return fragment;
                 case 1:
-                    CustomerFragment fragment2 = new CustomerFragment();
+                    AcceptedFragment fragment2 = new AcceptedFragment();
                     return fragment2;
+                case 2:
+                    CompletedFragment fragment3 = new CompletedFragment();
+                    return fragment3;
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Services";
+                    return "Open";
                 case 1:
-                    return "Customers";
+                    return "Accepted";
+                case 2:
+                    return "Completed";
             }
             return null;
         }

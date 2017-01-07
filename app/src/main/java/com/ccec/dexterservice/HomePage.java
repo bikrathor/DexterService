@@ -139,7 +139,7 @@ public class HomePage extends AppCompatActivity
                 HomeFragment homeFragment = new HomeFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, homeFragment).commit();
-                getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Home"));
+                getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Services"));
                 tabLayout.setVisibility(View.VISIBLE);
                 AppData.setSelectedItem(0);
             } else {
@@ -259,7 +259,7 @@ public class HomePage extends AppCompatActivity
             HomeFragment homeFragment = new HomeFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, homeFragment).commit();
-            getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Home"));
+            getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Services"));
             tabLayout.setVisibility(View.VISIBLE);
             AppData.setSelectedItem(0);
         } else if (id == R.id.profile) {
@@ -270,11 +270,11 @@ public class HomePage extends AppCompatActivity
             getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Profile"));
             AppData.setSelectedItem(1);
             tabLayout.setVisibility(View.GONE);
-        } else if (id == R.id.files) {
-            FilesFragment profileFragment = new FilesFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, profileFragment).commit();
-            getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Files"));
+        } else if (id == R.id.customers) {
+//            FilesFragment profileFragment = new FilesFragment();
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.fragment_container, profileFragment).commit();
+//            getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Files"));
             tabLayout.setVisibility(View.GONE);
             AppData.setSelectedItem(2);
         } else if (id == R.id.blabla) {

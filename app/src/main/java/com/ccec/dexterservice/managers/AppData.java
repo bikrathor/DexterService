@@ -15,6 +15,7 @@ public class AppData {
     public static String currentStatus = "";
 
     public static int selectedItem = 0;
+    public static int selectedTab = 0;
 
     public static boolean setOne = true;
 

@@ -72,6 +72,7 @@ public class NewOrderDetailFragment extends Fragment {
     private LinearLayout lincompany1;
     private LinearLayoutManager linearLayoutManagerProcess;
     private RecyclerView processList;
+    private CardView cardProcessList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -293,6 +294,7 @@ public class NewOrderDetailFragment extends Fragment {
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         firebasedbrefproducts.child("status").setValue("Car came to service center");
                                                         CarCamesv.setClickable(false);
+                                                        showLastCard();
                                                     }
                                                 });
                                             }
@@ -329,6 +331,7 @@ public class NewOrderDetailFragment extends Fragment {
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         firebasedbrefproducts.child("status").setValue("Work started");
                                                         CarWorkStartedsv.setClickable(false);
+                                                        showLastCard();
                                                     }
                                                 });
                                             }
@@ -366,6 +369,7 @@ public class NewOrderDetailFragment extends Fragment {
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         firebasedbrefproducts.child("status").setValue("Work completed");
                                                         CarWorkCompletedsv.setClickable(false);
+                                                        showLastCard();
                                                     }
                                                 });
                                             }
@@ -403,6 +407,7 @@ public class NewOrderDetailFragment extends Fragment {
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         firebasedbrefproducts.child("status").setValue("Payment completed");
                                                         CarWorkPricePaidsv.setClickable(false);
+                                                        showLastCard();
                                                     }
                                                 });
                                             }
@@ -463,6 +468,8 @@ public class NewOrderDetailFragment extends Fragment {
                                                                                 sendNotification();
 
                                                                                 Toast.makeText(getActivity(), "Service completed", Toast.LENGTH_SHORT).show();
+                                                                                ((NewOrderDetail) getActivity()).goBack();
+                                                                                AppData.selectedTab = 2;
                                                                             }
                                                                         });
                                                                     }
@@ -547,15 +554,21 @@ public class NewOrderDetailFragment extends Fragment {
         });
         databaseReference2.keepSynced(true);
 
-        final CardView cardProcessList = (CardView) view.findViewById(R.id.card_view4);
+        cardProcessList = (CardView) view.findViewById(R.id.card_view4);
+        processList = (RecyclerView) view.findViewById(R.id.processList);
+        showLastCard();
+
+        return view;
+    }
+
+    private void showLastCard() {
         if (AppData.currentStatus == "Open")
             cardProcessList.setVisibility(View.GONE);
         else {
-            processList = (RecyclerView) view.findViewById(R.id.processList);
             linearLayoutManagerProcess = new LinearLayoutManager(getActivity());
             processList.setLayoutManager(linearLayoutManagerProcess);
 
-            databaseReference = FirebaseDatabase.getInstance().getReference("/processFlow/" + (String) ((HashMap) obj).get("key"));
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("/processFlow/" + (String) ((HashMap) obj).get("key"));
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -585,8 +598,6 @@ public class NewOrderDetailFragment extends Fragment {
             });
             databaseReference.keepSynced(true);
         }
-
-        return view;
     }
 
     private void sendNotification() {

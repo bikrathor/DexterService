@@ -1,21 +1,14 @@
 package com.ccec.dexterservice;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.ccec.dexterservice.managers.FilesRecyclerViewAdapter;
-import com.ccec.dexterservice.managers.FontsManager;
-import com.ccec.dexterservice.managers.RecyclerViewAdapter;
 import com.ccec.dexterservice.managers.UserSessionManager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,7 +19,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FilesFragment extends Fragment {
     private RecyclerView recyclerView;
