@@ -12,6 +12,7 @@ public class AppData {
 
     public static String selectedLoc = "";
     public static Location selectedCordLoc = null;
+    public static String currentStatus = "";
 
     public static int selectedItem = 0;
 

@@ -346,16 +346,22 @@ public class ServiceFragment extends Fragment {
 
             switch (selectedId) {
                 case 0:
-                    if (((String) requestMap.get("status")).equals("Open"))
+                    if (((String) requestMap.get("status")).equals("Open")) {
+                        AppData.currentStatus = "Open";
                         requestsMap.add(requestMap);
+                    }
                     break;
                 case 1:
-                    if (((String) requestMap.get("status")).equals("Accepted"))
+                    if (((String) requestMap.get("status")).equals("Accepted")) {
+                        AppData.currentStatus = "Accepted";
                         requestsMap.add(requestMap);
+                    }
                     break;
                 case 2:
-                    if (((String) requestMap.get("status")).equals("Completed"))
+                    if (((String) requestMap.get("status")).equals("Completed")) {
+                        AppData.currentStatus = "Completed";
                         requestsMap.add(requestMap);
+                    }
                     break;
             }
         }

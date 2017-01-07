@@ -10,427 +10,472 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/linProf"
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="30dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
+            android:layout_margin="5dp"
+            card_view:cardCornerRadius="4dp">
 
-            <TextView
-                android:id="@+id/fullNameTitle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="50"
-                android:alpha="0.92"
-                android:text="Placed by :"
-                android:textSize="15dp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/fullNameDetail"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="50"
-                android:alpha="0.92"
-                android:singleLine="false"
-                android:text="Fetching details.."
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linProf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="30dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
 
-        <LinearLayout
-            android:id="@+id/linProf1D"
+                    <TextView
+                        android:id="@+id/fullNameTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="50"
+                        android:alpha="0.92"
+                        android:text="Placed by :"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/fullNameDetail"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="50"
+                        android:alpha="0.92"
+                        android:singleLine="false"
+                        android:text="Fetching details.."
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linProf1D"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linProf"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/fullNameMore1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="50"
+                        android:alpha="0.92"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/fullNameMore"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="50"
+                        android:alpha="0.92"
+                        android:singleLine="false"
+                        android:text="(Locate on map?)"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="12dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/linProf1D"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginTop="5dp"
+                    android:alpha="0.5"
+                    android:background="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:id="@+id/linProf11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linProf1D"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/skypeNameTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="50"
+                        android:alpha="0.92"
+                        android:text="Placed for :"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/skypeNameDetail"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="50"
+                        android:alpha="0.92"
+                        android:singleLine="false"
+                        android:text="Not Mentioned"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linProf2D"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linProf11"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/skypeNameMore1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="50"
+                        android:alpha="0.92"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/skypeNameMore"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="50"
+                        android:alpha="0.92"
+                        android:singleLine="false"
+                        android:text="(Click here for details)"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="12dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/linProf2D"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginTop="5dp"
+                    android:alpha="0.5"
+                    android:background="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:id="@+id/linProf1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linProf2D"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/companyNameTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="50"
+                        android:alpha="0.92"
+                        android:text="Request placed on :"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/companyNameDetail"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="50"
+                        android:alpha="0.92"
+                        android:singleLine="false"
+                        android:text="Not Mentioned"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15dp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linProf"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="3dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-            <TextView
-                android:id="@+id/fullNameMore1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="50"
-                android:alpha="0.92"
-                android:singleLine="false"
-                android:text=""
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
-
-            <TextView
-                android:id="@+id/fullNameMore"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="50"
-                android:alpha="0.92"
-                android:singleLine="false"
-                android:text="(Locate on map?)"
-                android:textColor="@color/colorPrimary"
-                android:textSize="12dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linProf11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linProf1D"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-            <TextView
-                android:id="@+id/skypeNameTitle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="50"
-                android:alpha="0.92"
-                android:text="Placed for :"
-                android:textSize="15dp" />
-
-            <TextView
-                android:id="@+id/skypeNameDetail"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="50"
-                android:alpha="0.92"
-                android:singleLine="false"
-                android:text="Not Mentioned"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/linProf2D"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linProf11"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="3dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-            <TextView
-                android:id="@+id/skypeNameMore1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="50"
-                android:alpha="0.92"
-                android:singleLine="false"
-                android:text=""
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
-
-            <TextView
-                android:id="@+id/skypeNameMore"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="50"
-                android:alpha="0.92"
-                android:singleLine="false"
-                android:text="(Click here for details)"
-                android:textColor="@color/colorPrimary"
-                android:textSize="12dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linProf1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linProf2D"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-            <TextView
-                android:id="@+id/companyNameTitle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="50"
-                android:alpha="0.92"
-                android:text="Request placed on :"
-                android:textSize="15dp" />
-
-            <TextView
-                android:id="@+id/companyNameDetail"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="50"
-                android:alpha="0.92"
-                android:singleLine="false"
-                android:text="Not Mentioned"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/service_steps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linProf1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/sFlow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_weight="90"
-                android:alpha="0.92"
-                android:text="\u2022 Service Life Cycle:"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/car_service_steps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/service_steps"
-            android:orientation="vertical">
+            android:layout_below="@id/card_view3"
+            android:layout_margin="5dp"
+            card_view:cardCornerRadius="4dp">
 
             <LinearLayout
-                android:id="@+id/carcame"
+                android:id="@+id/car_service_steps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="100">
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/carcamestep"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="90"
-                    android:alpha="0.92"
-                    android:text="Car came to service center"
-                    android:textSize="15dp" />
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/carcameswitchButton"
+                    android:id="@+id/sFlow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_weight="10"
-                    android:checked="false"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/carworkstarted"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <TextView
-                    android:id="@+id/carworkstartedstep"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
                     android:layout_gravity="left"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
                     android:layout_weight="90"
                     android:alpha="0.92"
-                    android:text="Work on the car has started"
-                    android:textSize="15dp" />
+                    android:text="\u2022 Service Life Cycle:"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/carworkstartedswitchButton"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/carcame"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_weight="10"
-                    android:checked="false"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/carcamestep"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="90"
+                        android:alpha="0.92"
+                        android:text="Car came to service center"
+                        android:textSize="15dp" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/carcameswitchButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_weight="10"
+                        android:checked="false"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/carworkstarted"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/carworkstartedstep"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="90"
+                        android:alpha="0.92"
+                        android:text="Work on the car has started"
+                        android:textSize="15dp" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/carworkstartedswitchButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_weight="10"
+                        android:checked="false"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/carworkcompleted"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/carworkcompletedstep"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="90"
+                        android:alpha="0.92"
+                        android:text="Work on the car has completed"
+                        android:textSize="15dp" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/carworkcompletedswitchButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_weight="10"
+                        android:checked="false"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/carworkpricepaid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/workpricepaidstep"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="90"
+                        android:alpha="0.92"
+                        android:text="Customer paid"
+                        android:textSize="15dp" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/carworkpricepaidswitchButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_weight="10"
+                        android:checked="false"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/carworkrequestcomplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/workrequestcompletestep"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_weight="90"
+                        android:alpha="0.92"
+                        android:text="Work is completed"
+                        android:textSize="15dp" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/carworkrequestcompleteswitchButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_weight="10"
+                        android:checked="false"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
             </LinearLayout>
+        </android.support.v7.widget.CardView>
 
-            <LinearLayout
-                android:id="@+id/carworkcompleted"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <TextView
-                    android:id="@+id/carworkcompletedstep"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="90"
-                    android:alpha="0.92"
-                    android:text="Work on the car has completed"
-                    android:textSize="15dp" />
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/carworkcompletedswitchButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_weight="10"
-                    android:checked="false"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/carworkpricepaid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <TextView
-                    android:id="@+id/workpricepaidstep"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="90"
-                    android:alpha="0.92"
-                    android:text="Customer paid"
-                    android:textSize="15dp" />
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/carworkpricepaidswitchButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_weight="10"
-                    android:checked="false"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/carworkrequestcomplete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <TextView
-                    android:id="@+id/workrequestcompletestep"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="90"
-                    android:alpha="0.92"
-                    android:text="Work is completed"
-                    android:textSize="15dp" />
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/carworkrequestcompleteswitchButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_weight="10"
-                    android:checked="false"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/queries_steps"
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/car_service_steps"
-            android:orientation="vertical">
+            android:layout_below="@id/card_view"
+            android:layout_margin="5dp"
+            card_view:cardCornerRadius="4dp">
 
-            <TextView
-                android:id="@+id/queriesHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginLeft="20dp"
-                android:layout_weight="90"
-                android:alpha="0.92"
-                android:text="\u2022 Queries response from user:"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/queriesHeader2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="90"
-                android:text="(User responded 'YES' to following queries)"
-                android:textSize="15dp" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/queriesList"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp" />
-        </LinearLayout>
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/queries_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/queriesHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="20dp"
+                        android:layout_weight="90"
+                        android:alpha="0.92"
+                        android:text="\u2022 Queries response from user:"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/queriesHeader2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="90"
+                        android:text="(User responded 'YES' to following queries)"
+                        android:textSize="15dp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/queriesList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
     </RelativeLayout>
 </com.ccec.dexterservice.managers.CustomScrollView>

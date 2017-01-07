@@ -1,10 +1,13 @@
 package com.ccec.dexterservice;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +26,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ccec.dexterservice.entities.FlowRecord;
+import com.ccec.dexterservice.entities.Notif;
+import com.ccec.dexterservice.entities.Requests;
 import com.ccec.dexterservice.managers.AppData;
 import com.ccec.dexterservice.managers.QueryviewAdapter;
 import com.firebase.geofire.GeoFire;
@@ -36,7 +42,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +63,9 @@ public class NewOrderDetailFragment extends Fragment {
     private SwitchCompat CarCamesv, CarWorkStartedsv, CarWorkCompletedsv, CarWorkPricePaidsv, CarWorkRequestCompletedsv;
     private String ProcessFlowUpdateText, key;
     private DatabaseReference firebaseprocessflowref;
+    private boolean sCheckable = true;
+    private android.app.AlertDialog.Builder builder;
+    private TextView CarMake, CarModel, CarManufacturingYear, CarRegNumber, CarChessisNumber, CarKilometer, CarPollutionChkDt, CarNxtPollutionChkDt, CarInsurancePurchaseDt, CarNxtInsurancePurchaseDt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,6 +144,27 @@ public class NewOrderDetailFragment extends Fragment {
                 builder.setCancelable(true);
                 builder.setView(dialoglayout);
 
+                CarMake = (TextView) dialoglayout.findViewById(R.id.car_make_tv);
+                CarModel = (TextView) dialoglayout.findViewById(R.id.car_model_tv);
+                CarManufacturingYear = (TextView) dialoglayout.findViewById(R.id.car_manufactured_tv);
+                CarRegNumber = (TextView) dialoglayout.findViewById(R.id.car_regnum_tv);
+                CarChessisNumber = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tv);
+                CarKilometer = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tv);
+                CarPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollution_tv);
+                CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tv);
+                CarInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedt_tv);
+                CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tv);
+
+                CarMake.setText((String) ((HashMap) AppData.currentVehCust).get("make"));
+                CarModel.setText((String) ((HashMap) AppData.currentVehCust).get("model"));
+                CarManufacturingYear.setText((String) ((HashMap) AppData.currentVehCust).get("manufacturedin"));
+                CarRegNumber.setText((String) ((HashMap) AppData.currentVehCust).get("registrationnumber"));
+                CarChessisNumber.setText((String) ((HashMap) AppData.currentVehCust).get("chessisnumber"));
+                CarKilometer.setText((String) ((HashMap) AppData.currentVehCust).get("kilometer"));
+                CarPollutionChkDt.setText((String) ((HashMap) AppData.currentVehCust).get("polluctionchkdate"));
+                CarNxtPollutionChkDt.setText((String) ((HashMap) AppData.currentVehCust).get("nextpolluctionchkdate"));
+                CarInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insurancepurchasedate"));
+                CarNxtInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insuranceduedate"));
 
                 final AlertDialog dialog = builder.create();
                 dialog.show();
@@ -172,114 +204,286 @@ public class NewOrderDetailFragment extends Fragment {
         CarWorkPricePaidsv = (SwitchCompat) view.findViewById(R.id.carworkpricepaidswitchButton);
         CarWorkRequestCompletedsv = (SwitchCompat) view.findViewById(R.id.carworkrequestcompleteswitchButton);
 
-        CarCamesv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    ProcessFlowUpdateText = CarCametv.getText().toString();
-                    key = firebaseprocessflowref.push().getKey();
-                    firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
+        if (AppData.currentStatus == "Accepted") {
+            final DatabaseReference firebasedbrefproducts = FirebaseDatabase.getInstance().getReference().child("processFlow/" + (String) ((HashMap) obj).get("key"));
+            firebasedbrefproducts.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Map<String, Object> itemMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                    String temp = null;
+                    try {
+                        temp = (String) itemMap.get("switches");
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                        sCheckable = false;
+//                        CarCamesv.setClickable(false);
+                        CarWorkStartedsv.setClickable(false);
+                        CarWorkCompletedsv.setClickable(false);
+                        CarWorkPricePaidsv.setClickable(false);
+                        CarWorkRequestCompletedsv.setClickable(false);
+                    }
+
+                    if (temp == null)
+                        temp = "00000";
+
+                    if (temp.charAt(0) == '1') {
+                        CarCamesv.setChecked(true);
+                        CarCamesv.setClickable(false);
+                    }
+
+                    if (temp.charAt(1) == '1') {
+                        CarWorkStartedsv.setChecked(true);
+                        CarWorkStartedsv.setClickable(false);
+                    }
+
+                    if (temp.charAt(2) == '1') {
+                        CarWorkCompletedsv.setChecked(true);
+                        CarWorkCompletedsv.setClickable(false);
+                    }
+
+                    if (temp.charAt(3) == '1') {
+                        CarWorkPricePaidsv.setChecked(true);
+                        CarWorkPricePaidsv.setClickable(false);
+                    }
+
+                    if (temp.charAt(4) == '1') {
+                        CarWorkRequestCompletedsv.setChecked(true);
+                        CarWorkRequestCompletedsv.setClickable(false);
+                    }
+
+                    final String finalTemp = temp;
+                    CarCamesv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (sCheckable == true) {
+                                if (b) {
+                                    if (finalTemp.charAt(0) != '1') {
+                                        ProcessFlowUpdateText = CarCametv.getText().toString();
+                                        FlowRecord flowRecord = new FlowRecord();
+                                        flowRecord.setTitle(ProcessFlowUpdateText);
+
+                                        Calendar c = Calendar.getInstance();
+                                        SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM hh:mm a");
+                                        String formattedDate = df.format(c.getTime());
+                                        flowRecord.setTimestamp(formattedDate);
+
+                                        firebasedbrefproducts.push().setValue(flowRecord, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                firebasedbrefproducts.child("switches").setValue("10000", new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                        firebasedbrefproducts.child("status").setValue("Car came to service center");
+                                                        CarCamesv.setClickable(false);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                            } else {
+                                showD();
+                                CarCamesv.setChecked(false);
+                            }
+                        }
+                    });
+
+                    CarWorkStartedsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (b) {
+                                if (CarCamesv.isChecked()) {
+                                    if (finalTemp.charAt(1) != '1') {
+                                        ProcessFlowUpdateText = CarWorkStartedtv.getText().toString();
+                                        FlowRecord flowRecord = new FlowRecord();
+                                        flowRecord.setTitle(ProcessFlowUpdateText);
+
+                                        Calendar c = Calendar.getInstance();
+                                        SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM hh:mm a");
+                                        String formattedDate = df.format(c.getTime());
+                                        flowRecord.setTimestamp(formattedDate);
+
+                                        firebasedbrefproducts.push().setValue(flowRecord, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                firebasedbrefproducts.child("switches").setValue("11000", new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                        firebasedbrefproducts.child("status").setValue("Work started");
+                                                        CarWorkStartedsv.setClickable(false);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                                if (!CarCamesv.isChecked()) {
+                                    Toast.makeText(getContext(), "Please make sure that car came to service center.", Toast.LENGTH_SHORT).show();
+                                    CarWorkStartedsv.setChecked(false);
+                                }
+                            }
+                        }
+                    });
+
+                    CarWorkCompletedsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (b) {
+                                if (CarCamesv.isChecked() && CarWorkStartedsv.isChecked()) {
+                                    if (finalTemp.charAt(2) != '1') {
+                                        ProcessFlowUpdateText = CarWorkCompletedtv.getText().toString();
+                                        FlowRecord flowRecord = new FlowRecord();
+                                        flowRecord.setTitle(ProcessFlowUpdateText);
+
+                                        Calendar c = Calendar.getInstance();
+                                        SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM hh:mm a");
+                                        String formattedDate = df.format(c.getTime());
+                                        flowRecord.setTimestamp(formattedDate);
+
+                                        firebasedbrefproducts.push().setValue(flowRecord, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                firebasedbrefproducts.child("switches").setValue("11100", new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                        firebasedbrefproducts.child("status").setValue("Work completed");
+                                                        CarWorkCompletedsv.setClickable(false);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                                if (!CarWorkStartedsv.isChecked()) {
+                                    Toast.makeText(getContext(), "Please make sure that work on the car has started.", Toast.LENGTH_SHORT).show();
+                                    CarWorkCompletedsv.setChecked(false);
+                                }
+                            }
+                        }
+                    });
+
+                    CarWorkPricePaidsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (b) {
+                                if (CarCamesv.isChecked() && CarWorkStartedsv.isChecked() && CarWorkCompletedsv.isChecked()) {
+                                    if (finalTemp.charAt(3) != '1') {
+                                        ProcessFlowUpdateText = CarWorkPricePaidtv.getText().toString();
+                                        FlowRecord flowRecord = new FlowRecord();
+                                        flowRecord.setTitle(ProcessFlowUpdateText);
+
+                                        Calendar c = Calendar.getInstance();
+                                        SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM hh:mm a");
+                                        String formattedDate = df.format(c.getTime());
+                                        flowRecord.setTimestamp(formattedDate);
+
+                                        firebasedbrefproducts.push().setValue(flowRecord, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                firebasedbrefproducts.child("switches").setValue("11110", new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                        firebasedbrefproducts.child("status").setValue("Payment completed");
+                                                        CarWorkPricePaidsv.setClickable(false);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                                if (!CarWorkCompletedsv.isChecked()) {
+                                    Toast.makeText(getContext(), "Please make sure that work on the car has completed.", Toast.LENGTH_SHORT).show();
+                                    CarWorkPricePaidsv.setChecked(false);
+                                }
+
+                            }
+                        }
+                    });
+
+                    CarWorkRequestCompletedsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (b) {
+                                if (CarCamesv.isChecked() && CarWorkStartedsv.isChecked() && CarWorkCompletedsv.isChecked() && CarWorkPricePaidsv.isChecked()) {
+                                    if (finalTemp.charAt(4) != '1') {
+                                        final ProgressDialog pDialog = new ProgressDialog(getActivity());
+                                        pDialog.setMessage("Processing..");
+                                        pDialog.setIndeterminate(false);
+                                        pDialog.setCancelable(false);
+                                        pDialog.show();
+
+                                        ProcessFlowUpdateText = CarWorkRequestCompletedtv.getText().toString();
+                                        FlowRecord flowRecord = new FlowRecord();
+                                        flowRecord.setTitle(ProcessFlowUpdateText);
+
+                                        Calendar c = Calendar.getInstance();
+                                        SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM hh:mm a");
+                                        String formattedDate = df.format(c.getTime());
+                                        flowRecord.setTimestamp(formattedDate);
+
+                                        firebasedbrefproducts.push().setValue(flowRecord, new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                firebasedbrefproducts.child("switches").setValue("11111", new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                        firebasedbrefproducts.child("status").setValue("Completed", new DatabaseReference.CompletionListener() {
+                                                            @Override
+                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                final DatabaseReference firebasedbref = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + (String) ((HashMap) obj).get("key"));
+                                                                firebasedbref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                        Requests requests = dataSnapshot.getValue(Requests.class);
+                                                                        requests.setStatus("Completed");
+
+                                                                        DatabaseReference firebasedbref2 = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + (String) ((HashMap) obj).get("key"));
+                                                                        firebasedbref2.setValue(requests, new DatabaseReference.CompletionListener() {
+                                                                            @Override
+                                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                pDialog.dismiss();
+                                                                                sendNotification();
+
+                                                                                Toast.makeText(getActivity(), "Service completed", Toast.LENGTH_SHORT).show();
+                                                                            }
+                                                                        });
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                                if (!CarWorkPricePaidsv.isChecked()) {
+                                    Toast.makeText(getContext(), "Please make sure that customer has paid.", Toast.LENGTH_SHORT).show();
+                                    CarWorkRequestCompletedsv.setChecked(false);
+                                }
+                            }
+                        }
+                    });
                 }
 
-            }
-        });
-        CarWorkStartedsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    if (CarCamesv.isChecked()) {
-                        ProcessFlowUpdateText = CarWorkStartedtv.getText().toString();
-                        key = firebaseprocessflowref.push().getKey();
-                        firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
-                    }
-                    if (!CarCamesv.isChecked()) {
-                        Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
-                        CarWorkStartedsv.setChecked(false);
-                    }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
                 }
-            }
-        });
-
-        CarWorkCompletedsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    if (CarCamesv.isChecked() && CarWorkStartedsv.isChecked()) {
-                        ProcessFlowUpdateText = CarWorkCompletedtv.getText().toString();
-                        key = firebaseprocessflowref.push().getKey();
-                        firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
-                    }
-                    if (!CarCamesv.isChecked()) {
-                        Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
-                        CarWorkCompletedsv.setChecked(false);
-
-                    }
-                    if (!CarWorkStartedsv.isChecked()) {
-                        Toast.makeText(getContext(), "Please make sure that Car Came and Work Started are checked before this action.", Toast.LENGTH_SHORT).show();
-                        CarWorkCompletedsv.setChecked(false);
-                    }
-
-                }
-            }
-        });
-
-
-        CarWorkPricePaidsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    if (CarCamesv.isChecked() && CarWorkStartedsv.isChecked() && CarWorkCompletedsv.isChecked()) {
-                        ProcessFlowUpdateText = CarWorkPricePaidtv.getText().toString();
-                        key = firebaseprocessflowref.push().getKey();
-                        firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
-                    }
-                    if (!CarCamesv.isChecked()) {
-                        Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
-                        CarWorkPricePaidsv.setChecked(false);
-                    }
-                    if (!CarWorkStartedsv.isChecked()) {
-                        Toast.makeText(getContext(), "Please make sure that Car Came and Work Started are checked before this action.", Toast.LENGTH_SHORT).show();
-                        CarWorkPricePaidsv.setChecked(false);
-                    }
-                    if (!CarWorkCompletedsv.isChecked()) {
-                        Toast.makeText(getContext(), "Please make sure that Car Came,Work Started and Completed are checked before this action.", Toast.LENGTH_SHORT).show();
-                        CarWorkPricePaidsv.setChecked(false);
-                    }
-
-                }
-            }
-        });
-        CarWorkRequestCompletedsv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    if (CarCamesv.isChecked() && CarWorkStartedsv.isChecked() && CarWorkCompletedsv.isChecked() && CarWorkPricePaidsv.isChecked()) {
-                        ProcessFlowUpdateText = CarWorkRequestCompletedtv.getText().toString();
-                        key = firebaseprocessflowref.push().getKey();
-                        firebaseprocessflowref.child(key).setValue(ProcessFlowUpdateText);
-                    }
-                    if (!CarCamesv.isChecked()) {
-                        Toast.makeText(getContext(), "Please make sure that Car Came is checked before this action.", Toast.LENGTH_SHORT).show();
-                        CarWorkPricePaidsv.setChecked(false);
-                    }
-                    if (!CarWorkStartedsv.isChecked()) {
-                        Toast.makeText(getContext(), "Please make sure that Car Came and Work Started are checked before this action.", Toast.LENGTH_SHORT).show();
-                        CarWorkPricePaidsv.setChecked(false);
-                    }
-                    if (!CarWorkCompletedsv.isChecked()) {
-                        Toast.makeText(getContext(), "Please make sure that Car Came,Work Started and Completed are checked before this action.", Toast.LENGTH_SHORT).show();
-                        CarWorkPricePaidsv.setChecked(false);
-                    }
-                    if (!CarWorkPricePaidsv.isChecked()) {
-                        Toast.makeText(getContext(), "Please make sure that Car Came,Work Started,Completed & Paid are checked before this action.", Toast.LENGTH_SHORT).show();
-                        CarWorkPricePaidsv.setChecked(false);
-
-                    }
-
-                }
-            }
-        });
+            });
+            firebasedbrefproducts.keepSynced(true);
+        } else {
+            CarCamesv.setClickable(false);
+            CarWorkStartedsv.setClickable(false);
+            CarWorkCompletedsv.setClickable(false);
+            CarWorkPricePaidsv.setClickable(false);
+            CarWorkRequestCompletedsv.setClickable(false);
+        }
 
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.queriesList);
         final LinearLayout lrecyclerView = (LinearLayout) view.findViewById(R.id.queries_steps);
@@ -379,5 +583,40 @@ public class NewOrderDetailFragment extends Fragment {
 //        contactD.setText(yourDate);
 
         return view;
+    }
+
+    private void sendNotification() {
+        DatabaseReference firebasedbrefproduct = FirebaseDatabase.getInstance().getReference("users/Customer/" + AppData.currentSelectedUser);
+        firebasedbrefproduct.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DatabaseReference firebasedbrefproduc = FirebaseDatabase.getInstance().getReference();
+                Notif notif = new Notif();
+                notif.setUsername((String) ((HashMap) dataSnapshot.getValue()).get("fcm"));
+                notif.setMessage("Service Completed. Thanks for choosing us. We look forward to serve you in future.");
+                firebasedbrefproduc.child("notifs").push().setValue(notif);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void showD() {
+        builder = new android.app.AlertDialog.Builder(getActivity());
+        builder.setMessage("User has not accepted scheduled date until now.");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        android.app.AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
