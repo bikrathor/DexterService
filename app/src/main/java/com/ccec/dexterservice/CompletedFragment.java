@@ -379,6 +379,10 @@ public class CompletedFragment extends Fragment {
     }
 
     public void stopLoading() {
-        pDialog.dismiss();
+        try {
+            pDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
