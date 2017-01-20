@@ -1,5 +1,6 @@
 package com.ccec.dexterservice.managers;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,11 @@ import java.util.ArrayList;
 
 public class QueryviewAdapter extends RecyclerView.Adapter<QueryviewAdapter.ViewHolder> {
     private ArrayList<String> countries;
+    private Context ctx;
 
-    public QueryviewAdapter(ArrayList<String> countries) {
+    public QueryviewAdapter(ArrayList<String> countries, Context ctx) {
         this.countries = countries;
+        this.ctx = ctx;
     }
 
     @Override
@@ -25,8 +28,8 @@ public class QueryviewAdapter extends RecyclerView.Adapter<QueryviewAdapter.View
 
     @Override
     public void onBindViewHolder(QueryviewAdapter.ViewHolder viewHolder, int i) {
-
         viewHolder.tv_country.setText(countries.get(i));
+        viewHolder.tv_country.setTypeface(FontsManager.getRegularTypeface(ctx));
     }
 
     @Override

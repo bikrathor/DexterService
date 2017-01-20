@@ -18,13 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ccec.dexterservice.entities.Notif;
 import com.ccec.dexterservice.entities.RequestRow;
-import com.ccec.dexterservice.entities.Requests;
 import com.ccec.dexterservice.managers.AppData;
 import com.ccec.dexterservice.managers.CompletedRecyclerViewAdapter;
-import com.ccec.dexterservice.managers.FontsManager;
-import com.ccec.dexterservice.managers.OpenRecyclerViewAdapter;
 import com.ccec.dexterservice.managers.UserSessionManager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,7 +32,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,157 +139,6 @@ public class CompletedFragment extends Fragment {
         subButton.setVisibility(View.VISIBLE);
 
         myCalendar = Calendar.getInstance();
-    }
-
-    public void showInfo() {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialoglayout = inflater.inflate(R.layout.dialog_accept_order, null);
-        final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-        builder.setCancelable(true);
-        builder.setView(dialoglayout);
-        final android.support.v7.app.AlertDialog dialog = builder.create();
-        dialog.show();
-
-        TextView txtButton = (TextView) dialoglayout.findViewById(R.id.headerTextCloudCreated);
-        txtButton.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-
-        calButton = (Button) dialoglayout.findViewById(R.id.btn_pollutioncheckdate);
-        subButton = (Button) dialoglayout.findViewById(R.id.btn_pollutioncheckdate2);
-        calButton.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-        subButton.setTypeface(FontsManager.getBoldTypeface(getActivity()));
-        calButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-
-                long now = System.currentTimeMillis() - 1000;
-                dialog.getDatePicker().setMinDate(now);
-                dialog.show();
-            }
-        });
-
-        subButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final ProgressDialog pDialog = new ProgressDialog(getActivity());
-                pDialog.setMessage("Processing..");
-                pDialog.setIndeterminate(false);
-                pDialog.setCancelable(false);
-                pDialog.show();
-
-                SimpleDateFormat format = new SimpleDateFormat("d");
-                Date da = new Date();
-                da.setDate(Integer.parseInt(dayFire));
-                int mon = 0;
-                switch (monthFire) {
-                    case "Jan":
-                        mon = 0;
-                        break;
-                    case "Feb":
-                        mon = 1;
-                        break;
-                    case "Mar":
-                        mon = 2;
-                        break;
-                    case "Apr":
-                        mon = 3;
-                        break;
-                    case "May":
-                        mon = 4;
-                        break;
-                    case "Jun":
-                        mon = 5;
-                        break;
-                    case "Jul":
-                        mon = 6;
-                        break;
-                    case "Aug":
-                        mon = 7;
-                        break;
-                    case "Sep":
-                        mon = 8;
-                        break;
-                    case "Oct":
-                        mon = 9;
-                        break;
-                    case "Nov":
-                        mon = 10;
-                        break;
-                    case "Dec":
-                        mon = 11;
-                        break;
-                }
-                da.setMonth(mon);
-                String date = format.format(da);
-                if (date.endsWith("1") && !date.endsWith("11"))
-                    format = new SimpleDateFormat("EE, MMM d'st'");
-                else if (date.endsWith("2") && !date.endsWith("12"))
-                    format = new SimpleDateFormat("EE, MMM d'nd'");
-                else if (date.endsWith("3") && !date.endsWith("13"))
-                    format = new SimpleDateFormat("EE, MMM d'rd'");
-                else
-                    format = new SimpleDateFormat("EE, MMM d'th'");
-                final String yourDate = format.format(da);
-
-                final DatabaseReference firebasedbref = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
-                firebasedbref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Requests requests = dataSnapshot.getValue(Requests.class);
-                        requests.setScheduleTime(yourDate);
-                        requests.setStatus("Accepted");
-
-                        DatabaseReference firebasedbref2 = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
-                        firebasedbref2.setValue(requests, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                pDialog.dismiss();
-                                dialog.dismiss();
-                                sendNotification();
-
-                                HomeFragment profileFragment = new HomeFragment();
-                                getActivity().getSupportFragmentManager().beginTransaction()
-                                        .replace(R.id.fragment_container, profileFragment).commit();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        });
-    }
-
-    private void sendNotification() {
-        DatabaseReference firebasedbrefproduct = FirebaseDatabase.getInstance().getReference("users/Customer/" + AppData.currentSelectedUser);
-        firebasedbrefproduct.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                DatabaseReference firebasedbrefproduc = FirebaseDatabase.getInstance().getReference();
-                Notif notif = new Notif();
-                notif.setUsername((String) ((HashMap) dataSnapshot.getValue()).get("fcm"));
-                notif.setMessage("Order Accepted");
-                firebasedbrefproduc.child("notifs").push().setValue(notif);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void showDialog() {
-        pDialog = new ProgressDialog(getActivity());
-        pDialog.setMessage("Updating...");
-        pDialog.setIndeterminate(false);
-        pDialog.setCancelable(true);
-        pDialog.show();
     }
 
     public boolean isNetwork() {

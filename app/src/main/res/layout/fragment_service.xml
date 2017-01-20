@@ -40,7 +40,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:orientation="vertical"
-            android:scrollbars="none"
+            android:scrollbars="vertical"
             android:visibility="visible" />
     </RelativeLayout>
 </RelativeLayout>

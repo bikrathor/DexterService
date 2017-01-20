@@ -38,6 +38,19 @@
             android:textColor="#fff" />
 
         <Button
+            android:id="@+id/btn_pollutionchecktime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/colorPrimary"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Pick Time"
+            android:textColor="#fff" />
+
+        <Button
             android:id="@+id/btn_pollutioncheckdate2"
             android:layout_width="120dp"
             android:layout_height="wrap_content"

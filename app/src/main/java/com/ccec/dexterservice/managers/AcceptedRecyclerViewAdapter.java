@@ -47,7 +47,7 @@ public class AcceptedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public RecyclerViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerViewHolders viewHolder = null;
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_service_row, parent, false);
+        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_service_row2, parent, false);
         viewHolder = new RecyclerViewHolders(layoutView, requestRow);
 
         if (fragment != null)

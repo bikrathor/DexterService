@@ -7,6 +7,15 @@ package com.ccec.dexterservice.entities;
 public class Notif {
     private String username;
     private String message;
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getUsername() {
         return username;

@@ -2,6 +2,7 @@ package com.ccec.dexterservice;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.ccec.dexterservice.entities.Notif;
@@ -58,7 +60,8 @@ public class OpenFragment extends Fragment {
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener date;
     private String dayFire, monthFire, yearFire;
-    private Button subButton, calButton;
+    private Button subButton, calButton, timeButton;
+    private boolean setOne = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,9 +144,43 @@ public class OpenFragment extends Fragment {
         yearFire = format.format(myCalendar.getTime());
 
         calButton.setText(yourDate);
-        subButton.setVisibility(View.VISIBLE);
+
+        if (setOne)
+            subButton.setVisibility(View.VISIBLE);
+        else
+            setOne = true;
 
         myCalendar = Calendar.getInstance();
+    }
+
+    private void updateTime(int hours, int mins) {
+        String timeSet = "";
+        if (hours > 12) {
+            hours -= 12;
+            timeSet = "PM";
+        } else if (hours == 0) {
+            hours += 12;
+            timeSet = "AM";
+        } else if (hours == 12)
+            timeSet = "PM";
+        else
+            timeSet = "AM";
+
+        String minutes = "";
+        if (mins < 10)
+            minutes = "0" + mins;
+        else
+            minutes = String.valueOf(mins);
+
+        String aTime = new StringBuilder().append(hours).append(':')
+                .append(minutes).append(" ").append(timeSet).toString();
+
+        timeButton.setText(aTime);
+
+        if (setOne)
+            subButton.setVisibility(View.VISIBLE);
+        else
+            setOne = true;
     }
 
     public void showInfo() {
@@ -160,8 +197,10 @@ public class OpenFragment extends Fragment {
 
         calButton = (Button) dialoglayout.findViewById(R.id.btn_pollutioncheckdate);
         subButton = (Button) dialoglayout.findViewById(R.id.btn_pollutioncheckdate2);
+        timeButton = (Button) dialoglayout.findViewById(R.id.btn_pollutionchecktime);
         calButton.setTypeface(FontsManager.getRegularTypeface(getActivity()));
         subButton.setTypeface(FontsManager.getBoldTypeface(getActivity()));
+        timeButton.setTypeface(FontsManager.getRegularTypeface(getActivity()));
         calButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,6 +210,20 @@ public class OpenFragment extends Fragment {
 
                 long now = System.currentTimeMillis() - 1000;
                 dialog.getDatePicker().setMinDate(now);
+                dialog.show();
+            }
+        });
+
+        timeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog dialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        updateTime(selectedHour, selectedMinute);
+                    }
+                }, 10, 0, false);
+                dialog.setTitle("Approx Time");
                 dialog.show();
             }
         });
@@ -236,14 +289,16 @@ public class OpenFragment extends Fragment {
                     format = new SimpleDateFormat("EE, MMM d'rd'");
                 else
                     format = new SimpleDateFormat("EE, MMM d'th'");
-                final String yourDate = format.format(da);
+                String yourDate = format.format(da);
+                yourDate += ", " + timeButton.getText().toString();
 
                 final DatabaseReference firebasedbref = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
+                final String finalYourDate = yourDate;
                 firebasedbref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Requests requests = dataSnapshot.getValue(Requests.class);
-                        requests.setScheduleTime(yourDate);
+                        requests.setScheduleTime(finalYourDate);
                         requests.setStatus("Accepted");
 
                         DatabaseReference firebasedbref2 = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
@@ -280,6 +335,7 @@ public class OpenFragment extends Fragment {
                 Notif notif = new Notif();
                 notif.setUsername((String) ((HashMap) dataSnapshot.getValue()).get("fcm"));
                 notif.setMessage("Order Accepted");
+                notif.setTitle("Dexter");
                 firebasedbrefproduc.child("notifs").push().setValue(notif);
             }
 

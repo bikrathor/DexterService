@@ -36,6 +36,8 @@ public class ProcessFlowViewAdapter extends RecyclerView.Adapter<ProcessFlowView
 
         holder.RVtitle.setText(key.getTitle());
         holder.RVDate.setText(key.getTimestamp());
+        holder.RVtitle.setTypeface(FontsManager.getBoldTypeface(mContext));
+        holder.RVDate.setTypeface(FontsManager.getRegularTypeface(mContext));
     }
 
     @Override

@@ -31,6 +31,7 @@ import com.ccec.dexterservice.entities.FlowRecord;
 import com.ccec.dexterservice.entities.Notif;
 import com.ccec.dexterservice.entities.Requests;
 import com.ccec.dexterservice.managers.AppData;
+import com.ccec.dexterservice.managers.FontsManager;
 import com.ccec.dexterservice.managers.ProcessFlowViewAdapter;
 import com.ccec.dexterservice.managers.QueryviewAdapter;
 import com.firebase.geofire.GeoFire;
@@ -84,7 +85,7 @@ public class NewOrderDetailFragment extends Fragment {
             obj = AppData.currentVeh;
             custobj = AppData.currentVehCust;
 
-            appBarLayout.setTitle((String) ((HashMap) obj).get("key"));
+            appBarLayout.setTitle(FontsManager.actionBarTypeface(getActivity(), (String) ((HashMap) obj).get("key")));
         }
 
         firebaseprocessflowref = FirebaseDatabase.getInstance().getReference("processFlow/" + (String) ((HashMap) AppData.currentVeh).get("key"));
@@ -119,10 +120,20 @@ public class NewOrderDetailFragment extends Fragment {
         company = (TextView) view.findViewById(R.id.companyNameTitle);
         company1 = (TextView) view.findViewById(R.id.companyNameTitle1);
 
+        name.setTypeface(FontsManager.getBoldTypeface(getActivity()));
+        location.setTypeface(FontsManager.getBoldTypeface(getActivity()));
+        company.setTypeface(FontsManager.getBoldTypeface(getActivity()));
+        company1.setTypeface(FontsManager.getBoldTypeface(getActivity()));
+
         nameD = (TextView) view.findViewById(R.id.fullNameDetail);
         locationD = (TextView) view.findViewById(R.id.skypeNameDetail);
         companyD = (TextView) view.findViewById(R.id.companyNameDetail);
         companyD1 = (TextView) view.findViewById(R.id.companyNameDetail1);
+
+        nameD.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        locationD.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        companyD.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        companyD1.setTypeface(FontsManager.getRegularTypeface(getActivity()));
 
         lincompany1 = (LinearLayout) view.findViewById(R.id.linProf11111);
         linview1 = (View) view.findViewById(R.id.viewne);
@@ -131,11 +142,13 @@ public class NewOrderDetailFragment extends Fragment {
         SpannableString content = new SpannableString(locMoreD.getText());
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         locMoreD.setText(content);
+        locMoreD.setTypeface(FontsManager.getRegularTypeface(getActivity()));
 
         carMoreD = (TextView) view.findViewById(R.id.skypeNameMore);
         SpannableString content2 = new SpannableString(carMoreD.getText());
         content2.setSpan(new UnderlineSpan(), 0, content2.length(), 0);
         carMoreD.setText(content2);
+        carMoreD.setTypeface(FontsManager.getRegularTypeface(getActivity()));
 
         if (AppData.currentStatus == "Accepted" || AppData.currentStatus == "Completed") {
             if (AppData.currentStatus == "Completed")
@@ -174,6 +187,17 @@ public class NewOrderDetailFragment extends Fragment {
                 CarInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedt_tv);
                 CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tv);
 
+                CarMake.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarModel.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarManufacturingYear.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarRegNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarChessisNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarNxtPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+
                 CarMake.setText((String) ((HashMap) AppData.currentVehCust).get("make"));
                 CarModel.setText((String) ((HashMap) AppData.currentVehCust).get("model"));
                 CarManufacturingYear.setText((String) ((HashMap) AppData.currentVehCust).get("manufacturedin"));
@@ -184,6 +208,28 @@ public class NewOrderDetailFragment extends Fragment {
                 CarNxtPollutionChkDt.setText((String) ((HashMap) AppData.currentVehCust).get("nextpolluctionchkdate"));
                 CarInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insurancepurchasedate"));
                 CarNxtInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insuranceduedate"));
+
+                CarMake = (TextView) dialoglayout.findViewById(R.id.car_make_tvtxt);
+                CarModel = (TextView) dialoglayout.findViewById(R.id.car_model_tvtxt);
+                CarManufacturingYear = (TextView) dialoglayout.findViewById(R.id.car_manufactured_tvtxt);
+                CarRegNumber = (TextView) dialoglayout.findViewById(R.id.car_regnum_tvtxt);
+                CarChessisNumber = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tvtxt);
+                CarKilometer = (TextView) dialoglayout.findViewById(R.id.car_kilometer_tvtxt);
+                CarPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollution_tvtxt);
+                CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tvtxt);
+                CarInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedt_tvtxt);
+                CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tvtxt);
+
+                CarMake.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarModel.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarManufacturingYear.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarRegNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarChessisNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarNxtPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
 
                 final AlertDialog dialog = builder.create();
                 dialog.show();
@@ -216,6 +262,14 @@ public class NewOrderDetailFragment extends Fragment {
         CarWorkCompletedtv = (TextView) view.findViewById(R.id.carworkcompletedstep);
         CarWorkPricePaidtv = (TextView) view.findViewById(R.id.workpricepaidstep);
         CarWorkRequestCompletedtv = (TextView) view.findViewById(R.id.workrequestcompletestep);
+        TextView sFlowtv = (TextView) view.findViewById(R.id.sFlow);
+
+        CarCametv.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarWorkStartedtv.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarWorkCompletedtv.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarWorkPricePaidtv.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarWorkRequestCompletedtv.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        sFlowtv.setTypeface(FontsManager.getBoldTypeface(getActivity()));
 
         CarCamesv = (SwitchCompat) view.findViewById(R.id.carcameswitchButton);
         CarWorkStartedsv = (SwitchCompat) view.findViewById(R.id.carworkstartedswitchButton);
@@ -514,6 +568,11 @@ public class NewOrderDetailFragment extends Fragment {
             CarWorkRequestCompletedsv.setClickable(false);
         }
 
+        CarNxtInsurancePurchaseDt = (TextView) view.findViewById(R.id.queriesHeader);
+        CarInsurancePurchaseDt = (TextView) view.findViewById(R.id.queriesHeader2);
+        CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getBoldTypeface(getActivity()));
+        CarInsurancePurchaseDt.setTypeface(FontsManager.getBoldTypeface(getActivity()));
+
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.queriesList);
         final LinearLayout lrecyclerView = (LinearLayout) view.findViewById(R.id.queries_steps);
         recyclerView.setHasFixedSize(true);
@@ -536,7 +595,7 @@ public class NewOrderDetailFragment extends Fragment {
                         }
 
                         if (itemMap2.size() > 0) {
-                            RecyclerView.Adapter adapter = new QueryviewAdapter(itemMap2);
+                            RecyclerView.Adapter adapter = new QueryviewAdapter(itemMap2, getActivity());
                             recyclerView.setAdapter(adapter);
                         } else
                             lrecyclerView.setVisibility(View.GONE);
@@ -608,7 +667,8 @@ public class NewOrderDetailFragment extends Fragment {
                 DatabaseReference firebasedbrefproduc = FirebaseDatabase.getInstance().getReference();
                 Notif notif = new Notif();
                 notif.setUsername((String) ((HashMap) dataSnapshot.getValue()).get("fcm"));
-                notif.setMessage("Service Completed. Thanks for choosing us. We look forward to serve you in future.");
+                notif.setMessage("Thanks for choosing us. We look forward to serve you in future.");
+                notif.setTitle("Service Completed");
                 firebasedbrefproduc.child("notifs").push().setValue(notif);
             }
 
