@@ -226,10 +226,47 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/cardetailll7"
+        android:id="@+id/cardetailll61"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cardetailll6"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/car_avgkilometer_tvtxt"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:alpha="0.92"
+            android:text="Avg kilometer / month :"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/car_avgkilometer_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:alpha="0.92"
+            android:text="Not Mentioned"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cardetailll7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cardetailll61"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="15dp"
@@ -262,51 +299,52 @@
             android:textSize="15dp" />
     </LinearLayout>
 
+    <!--<LinearLayout-->
+        <!--android:id="@+id/cardetailll8"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/cardetailll7"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_marginTop="15dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="100">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/car_pollutionnxt_tvtxt"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="left"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_weight="50"-->
+            <!--android:alpha="0.92"-->
+            <!--android:text="Next Pollution Check Date :"-->
+            <!--android:textSize="15dp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/car_pollutionnxt_tv"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="left"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_weight="50"-->
+            <!--android:alpha="0.92"-->
+            <!--android:text="Not Mentioned"-->
+            <!--android:textColor="@color/colorPrimary"-->
+            <!--android:textSize="15dp" />-->
+    <!--</LinearLayout>-->
+
     <LinearLayout
-        android:id="@+id/cardetailll8"
+        android:id="@+id/cardetailll9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cardetailll7"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        android:weightSum="100">
-
-        <TextView
-            android:id="@+id/car_pollutionnxt_tvtxt"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="2dp"
-            android:layout_weight="50"
-            android:alpha="0.92"
-            android:text="Next Pollution Check Date :"
-            android:textSize="15dp" />
-
-        <TextView
-            android:id="@+id/car_pollutionnxt_tv"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="2dp"
-            android:layout_weight="50"
-            android:alpha="0.92"
-            android:text="Not Mentioned"
-            android:textColor="@color/colorPrimary"
-            android:textSize="15dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/cardetailll9"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cardetailll8"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal"
         android:weightSum="100">
 
@@ -336,41 +374,41 @@
             android:textSize="15dp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/cardetailll10"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cardetailll9"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        android:weightSum="100">
+    <!--<LinearLayout-->
+        <!--android:id="@+id/cardetailll10"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/cardetailll9"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_marginTop="15dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="100">-->
 
-        <TextView
-            android:id="@+id/car_insurancedtnxt_tvtxt"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="2dp"
-            android:layout_weight="50"
-            android:alpha="0.92"
-            android:text="Insurance Due Date :"
-            android:textSize="15dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/car_insurancedtnxt_tvtxt"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="left"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_weight="50"-->
+            <!--android:alpha="0.92"-->
+            <!--android:text="Insurance Due Date :"-->
+            <!--android:textSize="15dp" />-->
 
-        <TextView
-            android:id="@+id/car_insurancedtnxt_tv"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="2dp"
-            android:layout_weight="50"
-            android:alpha="0.92"
-            android:text="Not Mentioned"
-            android:textColor="@color/colorPrimary"
-            android:textSize="15dp" />
-    </LinearLayout>
+        <!--<TextView-->
+            <!--android:id="@+id/car_insurancedtnxt_tv"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="left"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:layout_weight="50"-->
+            <!--android:alpha="0.92"-->
+            <!--android:text="Not Mentioned"-->
+            <!--android:textColor="@color/colorPrimary"-->
+            <!--android:textSize="15dp" />-->
+    <!--</LinearLayout>-->
 </RelativeLayout>

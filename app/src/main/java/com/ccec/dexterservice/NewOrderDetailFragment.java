@@ -68,7 +68,7 @@ public class NewOrderDetailFragment extends Fragment {
     private DatabaseReference firebaseprocessflowref;
     private boolean sCheckable = true;
     private android.app.AlertDialog.Builder builder;
-    private TextView CarMake, CarModel, CarManufacturingYear, CarRegNumber, CarChessisNumber, CarKilometer, CarPollutionChkDt, CarNxtPollutionChkDt, CarInsurancePurchaseDt, CarNxtInsurancePurchaseDt, company1, companyD1;
+    private TextView CarMake, CarModel, CarManufacturingYear, CarRegNumber, CarChessisNumber,CarAvgKilometer, CarKilometer, CarPollutionChkDt, CarNxtPollutionChkDt, CarInsurancePurchaseDt, CarNxtInsurancePurchaseDt, company1, companyD1;
     private View linview1;
     private LinearLayout lincompany1;
     private LinearLayoutManager linearLayoutManagerProcess;
@@ -182,10 +182,11 @@ public class NewOrderDetailFragment extends Fragment {
                 CarRegNumber = (TextView) dialoglayout.findViewById(R.id.car_regnum_tv);
                 CarChessisNumber = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tv);
                 CarKilometer = (TextView) dialoglayout.findViewById(R.id.car_kilometer_tv);
+                CarAvgKilometer = (TextView) dialoglayout.findViewById(R.id.car_avgkilometer_tv);
                 CarPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollution_tv);
-                CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tv);
+//                CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tv);
                 CarInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedt_tv);
-                CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tv);
+//                CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tv);
 
                 CarMake.setTypeface(FontsManager.getRegularTypeface(getActivity()));
                 CarModel.setTypeface(FontsManager.getRegularTypeface(getActivity()));
@@ -193,10 +194,11 @@ public class NewOrderDetailFragment extends Fragment {
                 CarRegNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
                 CarChessisNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
                 CarPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarNxtPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+//                CarNxtPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
                 CarInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+//                CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
                 CarKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarAvgKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
 
                 CarMake.setText((String) ((HashMap) AppData.currentVehCust).get("make"));
                 CarModel.setText((String) ((HashMap) AppData.currentVehCust).get("model"));
@@ -204,10 +206,11 @@ public class NewOrderDetailFragment extends Fragment {
                 CarRegNumber.setText((String) ((HashMap) AppData.currentVehCust).get("registrationnumber"));
                 CarChessisNumber.setText((String) ((HashMap) AppData.currentVehCust).get("chessisnumber"));
                 CarKilometer.setText((String) ((HashMap) AppData.currentVehCust).get("kilometer"));
+                CarAvgKilometer.setText((String) ((HashMap) AppData.currentVehCust).get("avgrunning"));
                 CarPollutionChkDt.setText((String) ((HashMap) AppData.currentVehCust).get("polluctionchkdate"));
-                CarNxtPollutionChkDt.setText((String) ((HashMap) AppData.currentVehCust).get("nextpolluctionchkdate"));
+//                CarNxtPollutionChkDt.setText((String) ((HashMap) AppData.currentVehCust).get("nextpolluctionchkdate"));
                 CarInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insurancepurchasedate"));
-                CarNxtInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insuranceduedate"));
+//                CarNxtInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insuranceduedate"));
 
                 CarMake = (TextView) dialoglayout.findViewById(R.id.car_make_tvtxt);
                 CarModel = (TextView) dialoglayout.findViewById(R.id.car_model_tvtxt);
@@ -215,10 +218,11 @@ public class NewOrderDetailFragment extends Fragment {
                 CarRegNumber = (TextView) dialoglayout.findViewById(R.id.car_regnum_tvtxt);
                 CarChessisNumber = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tvtxt);
                 CarKilometer = (TextView) dialoglayout.findViewById(R.id.car_kilometer_tvtxt);
+                CarAvgKilometer = (TextView) dialoglayout.findViewById(R.id.car_avgkilometer_tvtxt);
                 CarPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollution_tvtxt);
-                CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tvtxt);
+//                CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tvtxt);
                 CarInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedt_tvtxt);
-                CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tvtxt);
+//                CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tvtxt);
 
                 CarMake.setTypeface(FontsManager.getRegularTypeface(getActivity()));
                 CarModel.setTypeface(FontsManager.getRegularTypeface(getActivity()));
@@ -226,10 +230,11 @@ public class NewOrderDetailFragment extends Fragment {
                 CarRegNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
                 CarChessisNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
                 CarPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarNxtPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+//                CarNxtPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
                 CarInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+//                CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
                 CarKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+                CarAvgKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
 
                 final AlertDialog dialog = builder.create();
                 dialog.show();
