@@ -25,6 +25,8 @@ public class AppData {
     public static String currentPath = "";
     public static String currentSelectedUser = "";
 
+    public static String currentImagePath = "";
+
     public static int getSelectedItem() {
         return selectedItem;
     }

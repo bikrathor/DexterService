@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -19,11 +19,9 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +29,7 @@ import com.ccec.dexterservice.entities.FlowRecord;
 import com.ccec.dexterservice.entities.Notif;
 import com.ccec.dexterservice.entities.Requests;
 import com.ccec.dexterservice.managers.AppData;
+import com.ccec.dexterservice.managers.AttachmentsViewAdapter;
 import com.ccec.dexterservice.managers.FontsManager;
 import com.ccec.dexterservice.managers.ProcessFlowViewAdapter;
 import com.ccec.dexterservice.managers.QueryviewAdapter;
@@ -39,11 +38,15 @@ import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.LocationCallback;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,10 +57,8 @@ import java.util.Map;
 
 public class NewOrderDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
-    private TextView location, contact, name, company;
-    private TextView locationD, contactD, nameD, companyD, locMoreD, carMoreD;
+    private TextView location, name, company, locationD, nameD, companyD, locMoreD, carMoreD;
     private Object obj;
-    private LinearLayout lin;
     private Object custobj;
     private GoogleMap mMap;
     private LatLng sydney;
@@ -68,12 +69,13 @@ public class NewOrderDetailFragment extends Fragment {
     private DatabaseReference firebaseprocessflowref;
     private boolean sCheckable = true;
     private android.app.AlertDialog.Builder builder;
-    private TextView CarMake, CarModel, CarManufacturingYear, CarRegNumber, CarChessisNumber,CarAvgKilometer, CarKilometer, CarPollutionChkDt, CarNxtPollutionChkDt, CarInsurancePurchaseDt, CarNxtInsurancePurchaseDt, company1, companyD1;
+    private TextView CarMake, CarModel, CarManufacturingYear, CarRegNumber, CarChessisNumber, CarAvgKilometer, CarKilometer, CarPollutionChkDt, CarNxtPollutionChkDt, CarInsurancePurchaseDt, CarNxtInsurancePurchaseDt, company1, companyD1;
     private View linview1;
-    private LinearLayout lincompany1;
     private LinearLayoutManager linearLayoutManagerProcess;
     private RecyclerView processList;
-    private CardView cardProcessList;
+    private CardView cardProcessList, cardAttachList;
+    private LinearLayout lrecyclerView, lrecyclerView2, lin, lincompany1;
+    private RecyclerView recyclerView, recyclerView2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -170,74 +172,7 @@ public class NewOrderDetailFragment extends Fragment {
         carMoreD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                final View dialoglayout = inflater.inflate(R.layout.custom_show_cardetails, null);
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setCancelable(true);
-                builder.setView(dialoglayout);
-
-                CarMake = (TextView) dialoglayout.findViewById(R.id.car_make_tv);
-                CarModel = (TextView) dialoglayout.findViewById(R.id.car_model_tv);
-                CarManufacturingYear = (TextView) dialoglayout.findViewById(R.id.car_manufactured_tv);
-                CarRegNumber = (TextView) dialoglayout.findViewById(R.id.car_regnum_tv);
-                CarChessisNumber = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tv);
-                CarKilometer = (TextView) dialoglayout.findViewById(R.id.car_kilometer_tv);
-                CarAvgKilometer = (TextView) dialoglayout.findViewById(R.id.car_avgkilometer_tv);
-                CarPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollution_tv);
-//                CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tv);
-                CarInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedt_tv);
-//                CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tv);
-
-                CarMake.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarModel.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarManufacturingYear.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarRegNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarChessisNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-//                CarNxtPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-//                CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarAvgKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-
-                CarMake.setText((String) ((HashMap) AppData.currentVehCust).get("make"));
-                CarModel.setText((String) ((HashMap) AppData.currentVehCust).get("model"));
-                CarManufacturingYear.setText((String) ((HashMap) AppData.currentVehCust).get("manufacturedin"));
-                CarRegNumber.setText((String) ((HashMap) AppData.currentVehCust).get("registrationnumber"));
-                CarChessisNumber.setText((String) ((HashMap) AppData.currentVehCust).get("chessisnumber"));
-                CarKilometer.setText((String) ((HashMap) AppData.currentVehCust).get("kilometer"));
-                CarAvgKilometer.setText((String) ((HashMap) AppData.currentVehCust).get("avgrunning"));
-                CarPollutionChkDt.setText((String) ((HashMap) AppData.currentVehCust).get("polluctionchkdate"));
-//                CarNxtPollutionChkDt.setText((String) ((HashMap) AppData.currentVehCust).get("nextpolluctionchkdate"));
-                CarInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insurancepurchasedate"));
-//                CarNxtInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insuranceduedate"));
-
-                CarMake = (TextView) dialoglayout.findViewById(R.id.car_make_tvtxt);
-                CarModel = (TextView) dialoglayout.findViewById(R.id.car_model_tvtxt);
-                CarManufacturingYear = (TextView) dialoglayout.findViewById(R.id.car_manufactured_tvtxt);
-                CarRegNumber = (TextView) dialoglayout.findViewById(R.id.car_regnum_tvtxt);
-                CarChessisNumber = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tvtxt);
-                CarKilometer = (TextView) dialoglayout.findViewById(R.id.car_kilometer_tvtxt);
-                CarAvgKilometer = (TextView) dialoglayout.findViewById(R.id.car_avgkilometer_tvtxt);
-                CarPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollution_tvtxt);
-//                CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tvtxt);
-                CarInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedt_tvtxt);
-//                CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tvtxt);
-
-                CarMake.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarModel.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarManufacturingYear.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarRegNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarChessisNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-//                CarNxtPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-//                CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-                CarAvgKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
-
-                final AlertDialog dialog = builder.create();
-                dialog.show();
+                showCarDetails();
             }
         });
 
@@ -268,6 +203,7 @@ public class NewOrderDetailFragment extends Fragment {
         CarWorkPricePaidtv = (TextView) view.findViewById(R.id.workpricepaidstep);
         CarWorkRequestCompletedtv = (TextView) view.findViewById(R.id.workrequestcompletestep);
         TextView sFlowtv = (TextView) view.findViewById(R.id.sFlow);
+        TextView aFlowtv = (TextView) view.findViewById(R.id.aFlow);
 
         CarCametv.setTypeface(FontsManager.getRegularTypeface(getActivity()));
         CarWorkStartedtv.setTypeface(FontsManager.getRegularTypeface(getActivity()));
@@ -275,6 +211,7 @@ public class NewOrderDetailFragment extends Fragment {
         CarWorkPricePaidtv.setTypeface(FontsManager.getRegularTypeface(getActivity()));
         CarWorkRequestCompletedtv.setTypeface(FontsManager.getRegularTypeface(getActivity()));
         sFlowtv.setTypeface(FontsManager.getBoldTypeface(getActivity()));
+        aFlowtv.setTypeface(FontsManager.getBoldTypeface(getActivity()));
 
         CarCamesv = (SwitchCompat) view.findViewById(R.id.carcameswitchButton);
         CarWorkStartedsv = (SwitchCompat) view.findViewById(R.id.carworkstartedswitchButton);
@@ -353,7 +290,7 @@ public class NewOrderDetailFragment extends Fragment {
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         firebasedbrefproducts.child("status").setValue("Car came to service center");
                                                         CarCamesv.setClickable(false);
-                                                        showLastCard();
+                                                        showProcessFlowCard();
                                                     }
                                                 });
                                             }
@@ -361,7 +298,7 @@ public class NewOrderDetailFragment extends Fragment {
                                     }
                                 }
                             } else {
-                                showD();
+                                showDialog();
                                 CarCamesv.setChecked(false);
                             }
                         }
@@ -390,7 +327,7 @@ public class NewOrderDetailFragment extends Fragment {
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         firebasedbrefproducts.child("status").setValue("Work started");
                                                         CarWorkStartedsv.setClickable(false);
-                                                        showLastCard();
+                                                        showProcessFlowCard();
                                                     }
                                                 });
                                             }
@@ -428,7 +365,7 @@ public class NewOrderDetailFragment extends Fragment {
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         firebasedbrefproducts.child("status").setValue("Work completed");
                                                         CarWorkCompletedsv.setClickable(false);
-                                                        showLastCard();
+                                                        showProcessFlowCard();
                                                     }
                                                 });
                                             }
@@ -466,7 +403,7 @@ public class NewOrderDetailFragment extends Fragment {
                                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                                         firebasedbrefproducts.child("status").setValue("Payment completed");
                                                         CarWorkPricePaidsv.setClickable(false);
-                                                        showLastCard();
+                                                        showProcessFlowCard();
                                                     }
                                                 });
                                             }
@@ -523,6 +460,25 @@ public class NewOrderDetailFragment extends Fragment {
                                                                         firebasedbref2.setValue(requests, new DatabaseReference.CompletionListener() {
                                                                             @Override
                                                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                                final DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("attachments/" + (String) ((HashMap) AppData.currentVeh).get("key"));
+                                                                                databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                    @Override
+                                                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                                        if (dataSnapshot.getChildrenCount() > 0) {
+                                                                                            Map<String, String> itemMap = (HashMap<String, String>) dataSnapshot.getValue();
+                                                                                            ArrayList<String> itemMap2 = new ArrayList<String>(itemMap.values());
+
+                                                                                            retainStorage(itemMap2);
+                                                                                            databaseReference2.removeValue();
+                                                                                        }
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                                                    }
+                                                                                });
+
                                                                                 pDialog.dismiss();
                                                                                 sendNotification();
 
@@ -562,10 +518,16 @@ public class NewOrderDetailFragment extends Fragment {
             });
             firebasedbrefproducts.keepSynced(true);
         } else {
-            if (AppData.currentStatus == "Completed") {
+            if (AppData.currentStatus == "Completed" || AppData.currentStatus == "Open") {
                 CardView cardView = (CardView) view.findViewById(R.id.card_view);
                 cardView.setVisibility(View.GONE);
             }
+
+            if (AppData.currentStatus == "Completed") {
+                CardView cardView = (CardView) view.findViewById(R.id.card_view5);
+                cardView.setVisibility(View.GONE);
+            }
+
             CarCamesv.setClickable(false);
             CarWorkStartedsv.setClickable(false);
             CarWorkCompletedsv.setClickable(false);
@@ -578,8 +540,148 @@ public class NewOrderDetailFragment extends Fragment {
         CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getBoldTypeface(getActivity()));
         CarInsurancePurchaseDt.setTypeface(FontsManager.getBoldTypeface(getActivity()));
 
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.queriesList);
-        final LinearLayout lrecyclerView = (LinearLayout) view.findViewById(R.id.queries_steps);
+        recyclerView = (RecyclerView) view.findViewById(R.id.queriesList);
+        lrecyclerView = (LinearLayout) view.findViewById(R.id.queries_steps);
+        showQueriesCard();
+
+        recyclerView2 = (RecyclerView) view.findViewById(R.id.attachList);
+        lrecyclerView2 = (LinearLayout) view.findViewById(R.id.attach_steps);
+        cardAttachList = (CardView) view.findViewById(R.id.card_view5);
+        showAttachmentsCard();
+
+        cardProcessList = (CardView) view.findViewById(R.id.card_view4);
+        processList = (RecyclerView) view.findViewById(R.id.processList);
+        showProcessFlowCard();
+
+        return view;
+    }
+
+    private void retainStorage(ArrayList<String> itemMap2) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        final StorageReference storageRef = storage.getReferenceFromUrl("gs://dexterapp-bb161.appspot.com");
+
+        for (String item : itemMap2) {
+            storageRef.child("attachments/" + item).delete().addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                }
+            });
+        }
+    }
+
+    private void showCarDetails() {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialoglayout = inflater.inflate(R.layout.custom_show_cardetails, null);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(true);
+        builder.setView(dialoglayout);
+
+        CarMake = (TextView) dialoglayout.findViewById(R.id.car_make_tv);
+        CarModel = (TextView) dialoglayout.findViewById(R.id.car_model_tv);
+        CarManufacturingYear = (TextView) dialoglayout.findViewById(R.id.car_manufactured_tv);
+        CarRegNumber = (TextView) dialoglayout.findViewById(R.id.car_regnum_tv);
+        CarChessisNumber = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tv);
+        CarKilometer = (TextView) dialoglayout.findViewById(R.id.car_kilometer_tv);
+        CarAvgKilometer = (TextView) dialoglayout.findViewById(R.id.car_avgkilometer_tv);
+        CarPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollution_tv);
+//                CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tv);
+        CarInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedt_tv);
+//                CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tv);
+
+        CarMake.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarModel.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarManufacturingYear.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarRegNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarChessisNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+//                CarNxtPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+//                CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarAvgKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+
+        CarMake.setText((String) ((HashMap) AppData.currentVehCust).get("make"));
+        CarModel.setText((String) ((HashMap) AppData.currentVehCust).get("model"));
+        CarManufacturingYear.setText((String) ((HashMap) AppData.currentVehCust).get("manufacturedin"));
+        CarRegNumber.setText((String) ((HashMap) AppData.currentVehCust).get("registrationnumber"));
+        CarChessisNumber.setText((String) ((HashMap) AppData.currentVehCust).get("chessisnumber"));
+        CarKilometer.setText((String) ((HashMap) AppData.currentVehCust).get("kilometer"));
+        CarAvgKilometer.setText((String) ((HashMap) AppData.currentVehCust).get("avgrunning"));
+        CarPollutionChkDt.setText((String) ((HashMap) AppData.currentVehCust).get("polluctionchkdate"));
+//                CarNxtPollutionChkDt.setText((String) ((HashMap) AppData.currentVehCust).get("nextpolluctionchkdate"));
+        CarInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insurancepurchasedate"));
+//                CarNxtInsurancePurchaseDt.setText((String) ((HashMap) AppData.currentVehCust).get("insuranceduedate"));
+
+        CarMake = (TextView) dialoglayout.findViewById(R.id.car_make_tvtxt);
+        CarModel = (TextView) dialoglayout.findViewById(R.id.car_model_tvtxt);
+        CarManufacturingYear = (TextView) dialoglayout.findViewById(R.id.car_manufactured_tvtxt);
+        CarRegNumber = (TextView) dialoglayout.findViewById(R.id.car_regnum_tvtxt);
+        CarChessisNumber = (TextView) dialoglayout.findViewById(R.id.car_chessisnum_tvtxt);
+        CarKilometer = (TextView) dialoglayout.findViewById(R.id.car_kilometer_tvtxt);
+        CarAvgKilometer = (TextView) dialoglayout.findViewById(R.id.car_avgkilometer_tvtxt);
+        CarPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollution_tvtxt);
+//                CarNxtPollutionChkDt = (TextView) dialoglayout.findViewById(R.id.car_pollutionnxt_tvtxt);
+        CarInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedt_tvtxt);
+//                CarNxtInsurancePurchaseDt = (TextView) dialoglayout.findViewById(R.id.car_insurancedtnxt_tvtxt);
+
+        CarMake.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarModel.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarManufacturingYear.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarRegNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarChessisNumber.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+//                CarNxtPollutionChkDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+//                CarNxtInsurancePurchaseDt.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        CarAvgKilometer.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showAttachmentsCard() {
+        recyclerView2.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView2.setLayoutManager(layoutManager);
+
+        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("attachments/" + (String) ((HashMap) AppData.currentVeh).get("key"));
+        databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    try {
+                        Map<String, String> itemMap = (HashMap<String, String>) dataSnapshot.getValue();
+                        ArrayList<String> itemMap2 = new ArrayList<String>(itemMap.values());
+
+                        if (itemMap2.size() > 0) {
+                            AttachmentsViewAdapter adapter = new AttachmentsViewAdapter(itemMap2, getActivity());
+                            recyclerView2.setAdapter(adapter);
+                        } else {
+                            lrecyclerView2.setVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        lrecyclerView2.setVisibility(View.GONE);
+                        e.printStackTrace();
+                    }
+                } else
+                    cardAttachList.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        databaseReference2.keepSynced(true);
+    }
+
+    private void showQueriesCard() {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -617,15 +719,9 @@ public class NewOrderDetailFragment extends Fragment {
             }
         });
         databaseReference2.keepSynced(true);
-
-        cardProcessList = (CardView) view.findViewById(R.id.card_view4);
-        processList = (RecyclerView) view.findViewById(R.id.processList);
-        showLastCard();
-
-        return view;
     }
 
-    private void showLastCard() {
+    private void showProcessFlowCard() {
         if (AppData.currentStatus == "Open")
             cardProcessList.setVisibility(View.GONE);
         else {
@@ -684,7 +780,7 @@ public class NewOrderDetailFragment extends Fragment {
         });
     }
 
-    private void showD() {
+    private void showDialog() {
         builder = new android.app.AlertDialog.Builder(getActivity());
         builder.setMessage("User has not accepted scheduled date until now.");
         builder.setCancelable(false);
