@@ -38,7 +38,7 @@
             android:name=".HomePage"
             android:label="Dexter Service"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Login"
             android:label="Dexter Service"
@@ -102,6 +102,10 @@
             </intent-filter>
         </service>
         <!-- [END firebase_iid_service] -->
+        <activity
+            android:name=".Legal"
+            android:label="@string/title_activity_legal"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

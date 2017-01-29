@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.ccec.dexterservice.CompletedFragment;
 import com.ccec.dexterservice.NewOrderDetail;
 import com.ccec.dexterservice.OpenFragment;
 import com.ccec.dexterservice.R;
@@ -34,11 +35,11 @@ import java.util.Map;
 public class CompletedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
     private List<RequestRow> requestRow;
     protected Context context;
-    private OpenFragment fragment;
+    private CompletedFragment fragment;
     private CircularImageView img;
     private int pos;
 
-    public CompletedRecyclerViewAdapter(Context context, List<RequestRow> requestRow, OpenFragment fragment) {
+    public CompletedRecyclerViewAdapter(Context context, List<RequestRow> requestRow, CompletedFragment fragment) {
         this.requestRow = requestRow;
         this.context = context;
         this.fragment = fragment;
@@ -92,18 +93,6 @@ public class CompletedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
         holder.accept.setVisibility(View.INVISIBLE);
         holder.chat.setVisibility(View.INVISIBLE);
-
-        holder.accept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isNetwork()) {
-                    AppData.currentPath = (String) requestMap.get("key");
-                    AppData.currentSelectedUser = (String) requestMap.get("issuedBy");
-                    fragment.showInfo();
-                } else
-                    Toast.makeText(context, "Please connect to internet", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

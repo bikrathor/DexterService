@@ -32,7 +32,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +59,8 @@ public class CompletedFragment extends Fragment {
     private DatePickerDialog.OnDateSetListener date;
     private String dayFire, monthFire, yearFire;
     private Button subButton, calButton;
+    public static boolean DESC = false;
+    private Map<String, Object> itemSortedMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,7 +97,7 @@ public class CompletedFragment extends Fragment {
         erTxt = (TextView) view.findViewById(R.id.errorHeader);
         erImg = (ImageView) view.findViewById(R.id.errorImage);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("/requests/" + AppData.serviceType);
+        databaseReference = FirebaseDatabase.getInstance().getReference("/requests/Completed" + AppData.serviceType);
         Query query = databaseReference.orderByChild("issuedTo").equalTo(id);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -101,6 +107,7 @@ public class CompletedFragment extends Fragment {
 
                 mySnap = dataSnapshot;
                 if (mySnap != null) {
+                    showDialog();
                     getAllRequests(mySnap);
                 }
             }
@@ -150,8 +157,11 @@ public class CompletedFragment extends Fragment {
         requestsMap = new ArrayList<Map<String, Object>>();
         recyclerViewList = new ArrayList<RequestRow>();
 
-        for (final DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-            Map<String, Object> requestMap = (HashMap<String, Object>) singleSnapshot.getValue();
+        Map<String, Object> rMap = (HashMap<String, Object>) dataSnapshot.getValue();
+        itemSortedMap = sortByComparator(rMap, DESC);
+
+        for (int i = 0; i < itemSortedMap.keySet().size(); i++) {
+            Map<String, Object> requestMap = (HashMap<String, Object>) itemSortedMap.get(itemSortedMap.keySet().toArray()[i]);
 
             switch (selectedId) {
                 case 0:
@@ -176,6 +186,14 @@ public class CompletedFragment extends Fragment {
         }
 
         getRequestDetails();
+    }
+
+    private void showDialog() {
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage("Updating...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
     }
 
     private void getRequestDetails() {
@@ -206,7 +224,7 @@ public class CompletedFragment extends Fragment {
                                 Map<String, Object> itemMap = (HashMap<String, Object>) dataSnapshot2.getValue();
                                 recyclerViewList.add(new RequestRow(requestsMap.get(temp), itemMap));
 
-                                recyclerViewAdapter = new CompletedRecyclerViewAdapter(getActivity(), recyclerViewList, null);
+                                    recyclerViewAdapter = new CompletedRecyclerViewAdapter(getActivity(), recyclerViewList, CompletedFragment.this);
                                 recyclerView.setAdapter(recyclerViewAdapter);
                             }
 
@@ -220,6 +238,27 @@ public class CompletedFragment extends Fragment {
                 databaseReference2.keepSynced(true);
             }
         }
+    }
+
+    private static Map<String, Object> sortByComparator(Map<String, Object> unsortMap, final boolean order) {
+        List<Map.Entry<String, Object>> list = new LinkedList<>(unsortMap.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<String, Object>>() {
+            public int compare(Map.Entry<String, Object> o1,
+                               Map.Entry<String, Object> o2) {
+                if (order)
+                    return ((String) ((HashMap) o1.getValue()).get("key")).compareTo((String) ((HashMap) o2.getValue()).get("key"));
+                else
+                    return ((String) ((HashMap) o2.getValue()).get("key")).compareTo((String) ((HashMap) o1.getValue()).get("key"));
+            }
+        });
+
+        Map<String, Object> sortedMap = new LinkedHashMap<String, Object>();
+        for (Map.Entry<String, Object> entry : list) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
     }
 
     public void stopLoading() {

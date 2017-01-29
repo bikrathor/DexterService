@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment {
         tabLayout.setupWithViewPager(mViewPager);
         changeTabsFont();
 
-        if (AppData.selectedTab != 0) {
+        if (AppData.selectedTab == 1) {
             setTab(AppData.selectedTab);
             AppData.selectedTab = 0;
         }
@@ -76,16 +76,13 @@ public class HomeFragment extends Fragment {
                 case 1:
                     AcceptedFragment fragment2 = new AcceptedFragment();
                     return fragment2;
-                case 2:
-                    CompletedFragment fragment3 = new CompletedFragment();
-                    return fragment3;
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
 
         @Override
@@ -95,8 +92,6 @@ public class HomeFragment extends Fragment {
                     return "Open";
                 case 1:
                     return "Accepted";
-                case 2:
-                    return "Completed";
             }
             return null;
         }

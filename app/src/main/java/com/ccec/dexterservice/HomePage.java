@@ -135,15 +135,22 @@ public class HomePage extends AppCompatActivity
         });
 
         if (!location.equals("na")) {
-            if (isNetwork()) {
+            if (AppData.selectedTab != 0) {
+                CompletedFragment completedFragment = new CompletedFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, completedFragment).commit();
+                getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Completed Services"));
+                tabLayout.setVisibility(View.GONE);
+                AppData.setSelectedItem(2);
+                AppData.selectedTab = 0;
+                navigationView.getMenu().getItem(2).setChecked(true);
+            } else {
                 HomeFragment homeFragment = new HomeFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, homeFragment).commit();
                 getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Services"));
                 tabLayout.setVisibility(View.VISIBLE);
                 AppData.setSelectedItem(0);
-            } else {
-                showHelperNoConnection();
             }
         } else {
             Bundle bundle = new Bundle();
@@ -270,16 +277,20 @@ public class HomePage extends AppCompatActivity
             getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Profile"));
             AppData.setSelectedItem(1);
             tabLayout.setVisibility(View.GONE);
-        } else if (id == R.id.customers) {
-//            FilesFragment profileFragment = new FilesFragment();
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.fragment_container, profileFragment).commit();
-//            getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Files"));
-            tabLayout.setVisibility(View.GONE);
+        } else if (id == R.id.completedServices) {
+            CompletedFragment completedFragment = new CompletedFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, completedFragment).commit();
+            getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Completed Services"));
             AppData.setSelectedItem(2);
-        } else if (id == R.id.blabla) {
             tabLayout.setVisibility(View.GONE);
+        } else if (id == R.id.about) {
+            HelpFragment ordersFragment = new HelpFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, ordersFragment).commit();
             AppData.setSelectedItem(3);
+            getSupportActionBar().setTitle(FontsManager.actionBarTypeface(getApplicationContext(), "Help"));
+            tabLayout.setVisibility(View.GONE);
         } else if (id == R.id.logout) {
             builder = new AlertDialog.Builder(HomePage.this);
             builder.setTitle("Logout");
@@ -326,13 +337,4 @@ public class HomePage extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        AppData.setOne = true;
-//        Intent intent = new Intent(this, HomePage.class);
-//        startActivity(intent);
-//        finish();
-//    }
 }

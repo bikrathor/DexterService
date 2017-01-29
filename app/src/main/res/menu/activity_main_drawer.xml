@@ -6,10 +6,10 @@
             android:title="Home" />
         <item android:id="@+id/profile" android:icon="@drawable/icon_user"
             android:title="Profile" />
-        <item android:id="@+id/customers" android:icon="@drawable/icon_users"
-            android:title="Customers" />
-        <item android:id="@+id/blabla" android:icon="@drawable/icon_text"
-            android:title="Bla Bla" />
+        <item android:id="@+id/completedServices" android:icon="@drawable/icon_completed"
+            android:title="Completed Services" />
+        <item android:id="@+id/about" android:icon="@drawable/icon_about"
+            android:title="About" />
         <item android:id="@+id/logout" android:icon="@drawable/icon_logout"
             android:title="Logout" />
     </group>

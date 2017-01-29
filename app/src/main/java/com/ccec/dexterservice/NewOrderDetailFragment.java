@@ -456,7 +456,10 @@ public class NewOrderDetailFragment extends Fragment {
                                                                         Requests requests = dataSnapshot.getValue(Requests.class);
                                                                         requests.setStatus("Completed");
 
-                                                                        DatabaseReference firebasedbref2 = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + (String) ((HashMap) obj).get("key"));
+                                                                        DatabaseReference firebasedbref3 = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + (String) ((HashMap) obj).get("key"));
+                                                                        firebasedbref3.removeValue();
+
+                                                                        DatabaseReference firebasedbref2 = FirebaseDatabase.getInstance().getReference().child("requests/Completed" + AppData.serviceType + "/" + (String) ((HashMap) obj).get("key"));
                                                                         firebasedbref2.setValue(requests, new DatabaseReference.CompletionListener() {
                                                                             @Override
                                                                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
