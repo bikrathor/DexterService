@@ -13,6 +13,15 @@ public class Requests {
     private String openTime;
     private String scheduleTime;
     private String queries;
+    private String estPrice;
+
+    public String getEstPrice() {
+        return estPrice;
+    }
+
+    public void setEstPrice(String estPrice) {
+        this.estPrice = estPrice;
+    }
 
     public String getQueries() {
         return queries;

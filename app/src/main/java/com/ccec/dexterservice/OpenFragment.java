@@ -68,6 +68,7 @@ public class OpenFragment extends Fragment {
     private boolean setOne = false;
     public static boolean DESC = false;
     private Map<String, Object> itemSortedMap;
+    private String finalYourDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -299,7 +300,7 @@ public class OpenFragment extends Fragment {
                 yourDate += ", " + timeButton.getText().toString();
 
                 final DatabaseReference firebasedbref = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
-                final String finalYourDate = yourDate;
+                finalYourDate = yourDate;
                 firebasedbref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -340,8 +341,8 @@ public class OpenFragment extends Fragment {
                 DatabaseReference firebasedbrefproduc = FirebaseDatabase.getInstance().getReference();
                 Notif notif = new Notif();
                 notif.setUsername((String) ((HashMap) dataSnapshot.getValue()).get("fcm"));
-                notif.setMessage("Order Accepted");
-                notif.setTitle("Dexter");
+                notif.setMessage(AppData.currentPath + " is scheduled on " + finalYourDate);
+                notif.setTitle(AppData.currentPath + " Accepted");
                 firebasedbrefproduc.child("notifs").push().setValue(notif);
             }
 
@@ -353,11 +354,15 @@ public class OpenFragment extends Fragment {
     }
 
     private void showDialog() {
-        pDialog = new ProgressDialog(getActivity());
-        pDialog.setMessage("Updating...");
-        pDialog.setIndeterminate(false);
-        pDialog.setCancelable(true);
-        pDialog.show();
+        try {
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Updating...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isNetwork() {

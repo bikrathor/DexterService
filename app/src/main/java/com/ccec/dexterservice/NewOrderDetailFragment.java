@@ -2,8 +2,10 @@ package com.ccec.dexterservice;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,7 +21,9 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -73,9 +77,12 @@ public class NewOrderDetailFragment extends Fragment {
     private View linview1;
     private LinearLayoutManager linearLayoutManagerProcess;
     private RecyclerView processList;
-    private CardView cardProcessList, cardAttachList;
+    private CardView cardProcessList, cardAttachList, cardPrice;
     private LinearLayout lrecyclerView, lrecyclerView2, lin, lincompany1;
     private RecyclerView recyclerView, recyclerView2;
+    private String finalTemp;
+    private String estPrice;
+    private TextView esPriceF, esPrice;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +97,7 @@ public class NewOrderDetailFragment extends Fragment {
             appBarLayout.setTitle(FontsManager.actionBarTypeface(getActivity(), (String) ((HashMap) obj).get("key")));
         }
 
+        estPrice = ((String) ((HashMap) AppData.currentVeh).get("estPrice"));
         firebaseprocessflowref = FirebaseDatabase.getInstance().getReference("processFlow/" + (String) ((HashMap) AppData.currentVeh).get("key"));
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire");
@@ -266,7 +274,7 @@ public class NewOrderDetailFragment extends Fragment {
                         CarWorkRequestCompletedsv.setClickable(false);
                     }
 
-                    final String finalTemp = temp;
+                    finalTemp = temp;
                     CarCamesv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -309,29 +317,35 @@ public class NewOrderDetailFragment extends Fragment {
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                             if (b) {
                                 if (CarCamesv.isChecked()) {
-                                    if (finalTemp.charAt(1) != '1') {
-                                        ProcessFlowUpdateText = CarWorkStartedtv.getText().toString();
-                                        FlowRecord flowRecord = new FlowRecord();
-                                        flowRecord.setTitle(ProcessFlowUpdateText);
+                                    if (estPrice.equals("")) {
+                                        Toast.makeText(getActivity(), "Please provide an estimate price for this service", Toast.LENGTH_LONG).show();
+                                        getPrice();
+                                        CarWorkStartedsv.setChecked(false);
+                                    } else {
+                                        if (finalTemp.charAt(1) != '1') {
+                                            ProcessFlowUpdateText = CarWorkStartedtv.getText().toString();
+                                            FlowRecord flowRecord = new FlowRecord();
+                                            flowRecord.setTitle(ProcessFlowUpdateText);
 
-                                        Calendar c = Calendar.getInstance();
-                                        SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM hh:mm a");
-                                        String formattedDate = df.format(c.getTime());
-                                        flowRecord.setTimestamp(formattedDate);
+                                            Calendar c = Calendar.getInstance();
+                                            SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM hh:mm a");
+                                            String formattedDate = df.format(c.getTime());
+                                            flowRecord.setTimestamp(formattedDate);
 
-                                        firebasedbrefproducts.push().setValue(flowRecord, new DatabaseReference.CompletionListener() {
-                                            @Override
-                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                firebasedbrefproducts.child("switches").setValue("11000", new DatabaseReference.CompletionListener() {
-                                                    @Override
-                                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                                        firebasedbrefproducts.child("status").setValue("Work started");
-                                                        CarWorkStartedsv.setClickable(false);
-                                                        showProcessFlowCard();
-                                                    }
-                                                });
-                                            }
-                                        });
+                                            firebasedbrefproducts.push().setValue(flowRecord, new DatabaseReference.CompletionListener() {
+                                                @Override
+                                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                    firebasedbrefproducts.child("switches").setValue("11000", new DatabaseReference.CompletionListener() {
+                                                        @Override
+                                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                            firebasedbrefproducts.child("status").setValue("Work started");
+                                                            CarWorkStartedsv.setClickable(false);
+                                                            showProcessFlowCard();
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
                                     }
                                 }
                                 if (!CarCamesv.isChecked()) {
@@ -552,11 +566,85 @@ public class NewOrderDetailFragment extends Fragment {
         cardAttachList = (CardView) view.findViewById(R.id.card_view5);
         showAttachmentsCard();
 
+        cardPrice = (CardView) view.findViewById(R.id.card_view6);
+        esPrice = (TextView) view.findViewById(R.id.estPrice);
+        esPriceF = (TextView) view.findViewById(R.id.estPriceFlow);
+        esPriceF.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        esPrice.setTypeface(FontsManager.getRegularTypeface(getActivity()));
+        if (!estPrice.equals("")) {
+            showPriceCard();
+        } else
+            cardPrice.setVisibility(View.GONE);
+
         cardProcessList = (CardView) view.findViewById(R.id.card_view4);
         processList = (RecyclerView) view.findViewById(R.id.processList);
         showProcessFlowCard();
 
         return view;
+    }
+
+    private void showPriceCard() {
+        cardPrice.setVisibility(View.VISIBLE);
+        esPrice.setText("\u20B9 " + estPrice);
+    }
+
+    private void getPrice() {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialoglayout = inflater.inflate(R.layout.custom_edit_item, null);
+        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+        builder.setCancelable(true);
+        builder.setView(dialoglayout);
+        final android.app.AlertDialog dialog = builder.create();
+        dialog.show();
+
+        final EditText textView = (EditText) dialoglayout.findViewById(R.id.newDetail);
+        Button btnView = (Button) dialoglayout.findViewById(R.id.submitButton);
+        btnView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (textView.getText().toString().equals(""))
+                    Toast.makeText(getActivity(), "Please provide a valid value", Toast.LENGTH_SHORT).show();
+                else if (isNetwork()) {
+                    dialog.dismiss();
+                    final ProgressDialog pDialog = new ProgressDialog(getActivity());
+                    pDialog.setMessage("Updating..");
+                    pDialog.setIndeterminate(false);
+                    pDialog.setCancelable(false);
+                    pDialog.show();
+                    final DatabaseReference firebasedbref = FirebaseDatabase.getInstance().getReference("requests/" + AppData.serviceType + "/" + (String) ((HashMap) obj).get("key"));
+                    firebasedbref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getChildrenCount() > 0) {
+                                Requests v = dataSnapshot.getValue(Requests.class);
+                                v.setEstPrice(textView.getText().toString());
+
+                                final DatabaseReference firebasedbref = FirebaseDatabase.getInstance().getReference("requests/" + AppData.serviceType + "/" + (String) ((HashMap) obj).get("key"));
+                                firebasedbref.setValue(v);
+                                pDialog.dismiss();
+                                Toast.makeText(getActivity(), "Price updated", Toast.LENGTH_SHORT).show();
+
+                                //show placeholder
+                                estPrice = textView.getText().toString();
+                                CarWorkStartedsv.setChecked(true);
+                                sendPriceNotification();
+                                showPriceCard();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    public boolean isNetwork() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     private void retainStorage(ArrayList<String> itemMap2) {
@@ -773,6 +861,26 @@ public class NewOrderDetailFragment extends Fragment {
                 notif.setUsername((String) ((HashMap) dataSnapshot.getValue()).get("fcm"));
                 notif.setMessage("Thanks for choosing us. We look forward to serve you in future.");
                 notif.setTitle("Service Completed");
+                firebasedbrefproduc.child("notifs").push().setValue(notif);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void sendPriceNotification() {
+        DatabaseReference firebasedbrefproduct = FirebaseDatabase.getInstance().getReference("users/Customer/" + AppData.currentSelectedUser);
+        firebasedbrefproduct.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DatabaseReference firebasedbrefproduc = FirebaseDatabase.getInstance().getReference();
+                Notif notif = new Notif();
+                notif.setUsername((String) ((HashMap) dataSnapshot.getValue()).get("fcm"));
+                notif.setMessage("The estimated price for " + (String) ((HashMap) obj).get("key") + " is " + estPrice);
+                notif.setTitle("Estimated Price");
                 firebasedbrefproduc.child("notifs").push().setValue(notif);
             }
 
