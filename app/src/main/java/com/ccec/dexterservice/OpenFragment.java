@@ -375,7 +375,9 @@ public class OpenFragment extends Fragment {
         recyclerViewList = new ArrayList<RequestRow>();
 
         Map<String, Object> rMap = (HashMap<String, Object>) dataSnapshot.getValue();
-        itemSortedMap = sortByComparator(rMap, DESC);
+        itemSortedMap = new HashMap<>();
+        if (rMap != null)
+            itemSortedMap = sortByComparator(rMap, DESC);
 
         for (int i = 0; i < itemSortedMap.keySet().size(); i++) {
             Map<String, Object> requestMap = (HashMap<String, Object>) itemSortedMap.get(itemSortedMap.keySet().toArray()[i]);
