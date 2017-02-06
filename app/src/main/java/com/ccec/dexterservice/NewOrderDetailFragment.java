@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -35,6 +36,8 @@ import com.ccec.dexterservice.entities.Requests;
 import com.ccec.dexterservice.managers.AppData;
 import com.ccec.dexterservice.managers.AttachmentsViewAdapter;
 import com.ccec.dexterservice.managers.FontsManager;
+import com.ccec.dexterservice.managers.JSONObjectParser;
+import com.ccec.dexterservice.managers.JSONStringParser;
 import com.ccec.dexterservice.managers.ProcessFlowViewAdapter;
 import com.ccec.dexterservice.managers.QueryviewAdapter;
 import com.firebase.geofire.GeoFire;
@@ -52,9 +55,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +91,9 @@ public class NewOrderDetailFragment extends Fragment {
     private String finalTemp;
     private String estPrice;
     private TextView esPriceF, esPrice;
+    private ProgressDialog pDialog;
+    private String titleParam;
+    private static final String BASE_URL = "http://188.166.245.67/html/phpscript/insertdata.php";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -859,9 +870,13 @@ public class NewOrderDetailFragment extends Fragment {
                 DatabaseReference firebasedbrefproduc = FirebaseDatabase.getInstance().getReference();
                 Notif notif = new Notif();
                 notif.setUsername((String) ((HashMap) dataSnapshot.getValue()).get("fcm"));
-                notif.setMessage("Thanks for choosing us. We look forward to serve you in future.");
+                titleParam = "Thanks for choosing us. We look forward to serve you in future.";
+                notif.setMessage(titleParam);
                 notif.setTitle("Service Completed");
                 firebasedbrefproduc.child("notifs").push().setValue(notif);
+
+                titleParam = "Thanks for choosing us, we look forward to serve you in future";
+                new GetData().execute();
             }
 
             @Override
@@ -879,9 +894,12 @@ public class NewOrderDetailFragment extends Fragment {
                 DatabaseReference firebasedbrefproduc = FirebaseDatabase.getInstance().getReference();
                 Notif notif = new Notif();
                 notif.setUsername((String) ((HashMap) dataSnapshot.getValue()).get("fcm"));
-                notif.setMessage("The estimated price for " + (String) ((HashMap) obj).get("key") + " is " + estPrice);
+                titleParam = "The estimated price for " + (String) ((HashMap) obj).get("key") + " is " + estPrice;
+                notif.setMessage(titleParam);
                 notif.setTitle("Estimated Price");
                 firebasedbrefproduc.child("notifs").push().setValue(notif);
+
+                new PostData().execute();
             }
 
             @Override
@@ -905,5 +923,107 @@ public class NewOrderDetailFragment extends Fragment {
 
         android.app.AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    private void showPDialog() {
+        try {
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Working...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    class PostData extends AsyncTask<String, String, String> {
+        private static final String url = BASE_URL;
+        private static final String TAG_DATA = "data";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showPDialog();
+        }
+
+        protected String doInBackground(String... args) {
+            JSONObjectParser jsonObjectParser = new JSONObjectParser();
+
+            SimpleDateFormat format = new SimpleDateFormat("d");
+            String date = format.format(new Date());
+            if (date.endsWith("1") && !date.endsWith("11"))
+                format = new SimpleDateFormat("EE, MMM d'st'");
+            else if (date.endsWith("2") && !date.endsWith("12"))
+                format = new SimpleDateFormat("EE, MMM d'nd'");
+            else if (date.endsWith("3") && !date.endsWith("13"))
+                format = new SimpleDateFormat("EE, MMM d'rd'");
+            else
+                format = new SimpleDateFormat("EE, MMM d'th'");
+            final String yourDate = format.format(new Date());
+
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("uid", AppData.currentSelectedUser));
+            params.add(new BasicNameValuePair("title", titleParam));
+            params.add(new BasicNameValuePair("date", yourDate));
+            params.add(new BasicNameValuePair("extra", ""));
+
+            JSONObject json = jsonObjectParser.makeHttpRequest(url, "GET", params);
+
+            return null;
+        }
+
+        protected void onPostExecute(String file_url) {
+            try {
+                pDialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class GetData extends AsyncTask<String, String, String> {
+        private static final String url = BASE_URL;
+        private static final String TAG_DATA = "data";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showPDialog();
+        }
+
+        protected String doInBackground(String... args) {
+            JSONStringParser jsonObjectParser = new JSONStringParser();
+
+            SimpleDateFormat format = new SimpleDateFormat("d");
+            String date = format.format(new Date());
+            if (date.endsWith("1") && !date.endsWith("11"))
+                format = new SimpleDateFormat("EE, MMM d'st'");
+            else if (date.endsWith("2") && !date.endsWith("12"))
+                format = new SimpleDateFormat("EE, MMM d'nd'");
+            else if (date.endsWith("3") && !date.endsWith("13"))
+                format = new SimpleDateFormat("EE, MMM d'rd'");
+            else
+                format = new SimpleDateFormat("EE, MMM d'th'");
+            final String yourDate = format.format(new Date());
+
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("uid", AppData.currentSelectedUser));
+            params.add(new BasicNameValuePair("title", titleParam));
+            params.add(new BasicNameValuePair("date", yourDate));
+            params.add(new BasicNameValuePair("extra", ""));
+
+            String json = jsonObjectParser.makeServiceCall(url, 1, params);
+
+            return null;
+        }
+
+        protected void onPostExecute(String file_url) {
+            try {
+                pDialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -50,8 +50,9 @@ public class OpenRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHo
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_service_row, parent, false);
         viewHolder = new RecyclerViewHolders(layoutView, requestRow);
 
-        if (fragment != null)
+        if (fragment != null) {
             fragment.stopLoading();
+        }
 
         return viewHolder;
     }

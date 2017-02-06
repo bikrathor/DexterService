@@ -143,6 +143,7 @@ public class AcceptedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         AppData.currentVeh = requestRow.get(pos).getRequestMap();
         AppData.currentVehCust = requestRow.get(pos).getItemMap();
+        AppData.currentSelectedUser = (String) ((HashMap) AppData.currentVeh).get("issuedBy");
         AppData.currentStatus = "Accepted";
 
         context.startActivity(intent);

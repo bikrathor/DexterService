@@ -5,10 +5,12 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ import com.ccec.dexterservice.entities.RequestRow;
 import com.ccec.dexterservice.entities.Requests;
 import com.ccec.dexterservice.managers.AppData;
 import com.ccec.dexterservice.managers.FontsManager;
+import com.ccec.dexterservice.managers.JSONObjectParser;
 import com.ccec.dexterservice.managers.OpenRecyclerViewAdapter;
 import com.ccec.dexterservice.managers.UserSessionManager;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +36,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,6 +77,7 @@ public class OpenFragment extends Fragment {
     public static boolean DESC = false;
     private Map<String, Object> itemSortedMap;
     private String finalYourDate;
+    private static final String BASE_URL = "http://188.166.245.67/html/phpscript/insertdata.php";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -241,7 +250,7 @@ public class OpenFragment extends Fragment {
                 final ProgressDialog pDialog = new ProgressDialog(getActivity());
                 pDialog.setMessage("Processing..");
                 pDialog.setIndeterminate(false);
-                pDialog.setCancelable(false);
+                pDialog.setCancelable(true);
                 pDialog.show();
 
                 SimpleDateFormat format = new SimpleDateFormat("d");
@@ -315,11 +324,7 @@ public class OpenFragment extends Fragment {
                                 pDialog.dismiss();
                                 dialog.dismiss();
                                 sendNotification();
-
-                                AppData.selectedTab = 1;
-                                HomeFragment profileFragment = new HomeFragment();
-                                getActivity().getSupportFragmentManager().beginTransaction()
-                                        .replace(R.id.fragment_container, profileFragment).commit();
+                                new PostData().execute();
                             }
                         });
                     }
@@ -473,6 +478,63 @@ public class OpenFragment extends Fragment {
     }
 
     public void stopLoading() {
-        pDialog.dismiss();
+        try {
+            pDialog.dismiss();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    class PostData extends AsyncTask<String, String, String> {
+        private static final String url = BASE_URL;
+        private static final String TAG_DATA = "data";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog.dismiss();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Working...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        protected String doInBackground(String... args) {
+            JSONObjectParser jsonObjectParser = new JSONObjectParser();
+
+            SimpleDateFormat format = new SimpleDateFormat("d");
+            String date = format.format(new Date());
+            if (date.endsWith("1") && !date.endsWith("11"))
+                format = new SimpleDateFormat("EE, MMM d'st'");
+            else if (date.endsWith("2") && !date.endsWith("12"))
+                format = new SimpleDateFormat("EE, MMM d'nd'");
+            else if (date.endsWith("3") && !date.endsWith("13"))
+                format = new SimpleDateFormat("EE, MMM d'rd'");
+            else
+                format = new SimpleDateFormat("EE, MMM d'th'");
+            final String yourDate = format.format(new Date());
+
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("uid", AppData.currentSelectedUser));
+            params.add(new BasicNameValuePair("title", AppData.currentPath + " is scheduled on " + finalYourDate));
+            params.add(new BasicNameValuePair("date", yourDate));
+            params.add(new BasicNameValuePair("extra", ""));
+
+            JSONObject json = jsonObjectParser.makeHttpRequest(url, "GET", params);
+
+            return null;
+        }
+
+        protected void onPostExecute(String file_url) {
+            pDialog.dismiss();
+            try {
+                AppData.selectedTab = 1;
+                HomeFragment profileFragment = new HomeFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, profileFragment).commit();
+            } catch (Exception e) {
+            }
+        }
     }
 }
