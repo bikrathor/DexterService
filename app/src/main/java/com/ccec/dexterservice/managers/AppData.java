@@ -2,9 +2,7 @@ package com.ccec.dexterservice.managers;
 
 import android.location.Location;
 
-/**
- * Created by manish on 11/11/16.
- */
+import com.ccec.dexterservice.entities.Requests;
 
 public class AppData {
     //updated from profile
@@ -26,6 +24,8 @@ public class AppData {
     public static String currentSelectedUser = "";
 
     public static String currentImagePath = "";
+
+    public static Requests currentReq = null;
 
     public static int getSelectedItem() {
         return selectedItem;

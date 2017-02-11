@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,6 +63,8 @@ public class AcceptedFragment extends Fragment {
     private Button subButton, calButton;
     public static boolean DESC = false;
     private Map<String, Object> itemSortedMap;
+    private boolean swiper = false;
+    private SwipeRefreshLayout mySwipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,6 +101,32 @@ public class AcceptedFragment extends Fragment {
         erTxt = (TextView) view.findViewById(R.id.errorHeader);
         erImg = (ImageView) view.findViewById(R.id.errorImage);
 
+        fetchData();
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        mySwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshClouds);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        swiper = true;
+                        fetchData();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mySwipeRefreshLayout.setRefreshing(false);
+                            }
+                        }, 2000);
+                    }
+                }
+        );
+    }
+
+    private void fetchData() {
         databaseReference = FirebaseDatabase.getInstance().getReference("/requests/" + AppData.serviceType);
         Query query = databaseReference.orderByChild("issuedTo").equalTo(id);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -117,8 +147,6 @@ public class AcceptedFragment extends Fragment {
             }
         });
         databaseReference.keepSynced(true);
-
-        return view;
     }
 
     private void updateCal() {
@@ -224,7 +252,9 @@ public class AcceptedFragment extends Fragment {
                             @Override
                             public void onCancelled(DatabaseError databaseError2) {
                                 Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                                pDialog.dismiss();
+                                if (swiper==false) {
+                                    pDialog.dismiss();
+                                }
                                 return;
                             }
                         });
@@ -256,8 +286,9 @@ public class AcceptedFragment extends Fragment {
 
     public void stopLoading() {
         try {
-            pDialog.dismiss();
-        } catch (Exception e) {
+            if (swiper==false) {
+                pDialog.dismiss();
+            }        } catch (Exception e) {
             e.printStackTrace();
         }
     }

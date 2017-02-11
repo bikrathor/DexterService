@@ -1,7 +1,5 @@
 package com.ccec.dexterservice.entities;
 
-import android.widget.Button;
-
 /**
  * Created by aanchalharit on 01/10/16.
  */

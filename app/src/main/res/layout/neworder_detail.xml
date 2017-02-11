@@ -141,7 +141,7 @@
                         android:layout_weight="50"
                         android:alpha="0.92"
                         android:singleLine="false"
-                        android:text="Not Mentioned"
+                        android:text="Fetching details.."
                         android:textColor="@color/colorPrimary"
                         android:textSize="15dp" />
                 </LinearLayout>
@@ -284,7 +284,7 @@
                         android:singleLine="false"
                         android:text="Not Mentioned"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="15dp" />
+                        android:textSize="14dp" />
                 </LinearLayout>
             </RelativeLayout>
         </android.support.v7.widget.CardView>

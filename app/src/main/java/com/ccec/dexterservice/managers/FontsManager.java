@@ -2,7 +2,6 @@ package com.ccec.dexterservice.managers;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.app.ActionBar;
 import android.text.Spannable;
 import android.text.SpannableString;
 

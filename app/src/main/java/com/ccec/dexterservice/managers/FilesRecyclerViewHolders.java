@@ -3,15 +3,12 @@ package com.ccec.dexterservice.managers;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.ccec.dexterservice.R;
-import com.ccec.dexterservice.entities.RequestRow;
 import com.pkmmte.view.CircularImageView;
 
 import java.util.List;
-import java.util.Map;
 
 public class FilesRecyclerViewHolders extends RecyclerView.ViewHolder {
     public CircularImageView RVCircle;

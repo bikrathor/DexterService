@@ -1,9 +1,5 @@
 package com.ccec.dexterservice.entities;
 
-/**
- * Created by manish on 10/11/16.
- */
-
 public class Requests {
     private String issuedBy;
     private String issuedTo;

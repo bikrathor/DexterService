@@ -12,10 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.ccec.dexterservice.CompletedFragment;
+import com.ccec.dexterservice.NewCompletedOrderDetail;
 import com.ccec.dexterservice.NewOrderDetail;
-import com.ccec.dexterservice.OpenFragment;
 import com.ccec.dexterservice.R;
 import com.ccec.dexterservice.entities.RequestRow;
+import com.ccec.dexterservice.entities.Requests;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -32,24 +33,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CompletedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
-    private List<RequestRow> requestRow;
+public class CompletedRecyclerViewAdapter extends RecyclerView.Adapter<ComRecyclerViewHolders> {
+    private List<Requests> requestRow;
     protected Context context;
     private CompletedFragment fragment;
     private CircularImageView img;
     private int pos;
 
-    public CompletedRecyclerViewAdapter(Context context, List<RequestRow> requestRow, CompletedFragment fragment) {
+    public CompletedRecyclerViewAdapter(Context context, List<Requests> requestRow, CompletedFragment fragment) {
         this.requestRow = requestRow;
         this.context = context;
         this.fragment = fragment;
     }
 
     @Override
-    public RecyclerViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerViewHolders viewHolder = null;
+    public ComRecyclerViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
+        ComRecyclerViewHolders viewHolder = null;
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_service_row2, parent, false);
-        viewHolder = new RecyclerViewHolders(layoutView, requestRow);
+        viewHolder = new ComRecyclerViewHolders(layoutView, requestRow);
 
         if (fragment != null)
             fragment.stopLoading();
@@ -58,16 +59,14 @@ public class CompletedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerViewHolders holder, final int position) {
-        final Map<String, Object> requestMap = requestRow.get(position).getRequestMap();
-        Map<String, Object> itemMap = requestRow.get(position).getItemMap();
+    public void onBindViewHolder(final ComRecyclerViewHolders holder, final int position) {
+        Requests req = requestRow.get(position);
 
-        holder.requestID.setText((String) requestMap.get("key"));
-        holder.areaModel.setText((String) itemMap.get("make") + " " + (String) itemMap.get("model"));
-        holder.scheduledTime.setText("Processed on: " + (String) requestMap.get("scheduleTime"));
+        holder.requestID.setText(req.getKey());
+        holder.scheduledTime.setText("Processed on: " + req.getScheduleTime());
 
         img = holder.RVCircle;
-        String temp = (String) requestMap.get("item");
+        String temp = req.getItem();
         setPic(temp, img);
 
         holder.requestID.setTypeface(FontsManager.getBoldTypeface(context));
@@ -75,9 +74,23 @@ public class CompletedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         holder.openTime.setTypeface(FontsManager.getRegularTypeface(context));
         holder.scheduledTime.setTypeface(FontsManager.getRegularTypeface(context));
 
-        holder.openTime.setText("Fetching name..");
+        holder.areaModel.setText("Fetching car details..");
+        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("items/" + AppData.serviceType + "/" + req.getItem());
+        databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> itemMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                holder.areaModel.setText((String) itemMap.get("make") + " " + (String) itemMap.get("model"));
+            }
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/Customer/" + (String) requestMap.get("issuedBy"));
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        holder.openTime.setText("Fetching name..");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/Customer/" + req.getIssuedBy());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -90,9 +103,6 @@ public class CompletedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
             }
         });
-
-        holder.accept.setVisibility(View.INVISIBLE);
-        holder.chat.setVisibility(View.INVISIBLE);
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,10 +138,9 @@ public class CompletedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     }
 
     public void getProductDetails() {
-        Intent intent = new Intent(context, NewOrderDetail.class);
+        Intent intent = new Intent(context, NewCompletedOrderDetail.class);
 
-        AppData.currentVeh = requestRow.get(pos).getRequestMap();
-        AppData.currentVehCust = requestRow.get(pos).getItemMap();
+        AppData.currentReq = requestRow.get(pos);
         AppData.currentStatus = "Completed";
 
         context.startActivity(intent);

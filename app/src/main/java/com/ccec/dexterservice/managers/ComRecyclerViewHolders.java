@@ -7,20 +7,19 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ccec.dexterservice.R;
-import com.ccec.dexterservice.entities.RequestRow;
 import com.ccec.dexterservice.entities.Requests;
 import com.pkmmte.view.CircularImageView;
 
 import java.util.List;
 
-public class RecyclerViewHolders extends RecyclerView.ViewHolder {
+public class ComRecyclerViewHolders extends RecyclerView.ViewHolder {
     public CircularImageView RVCircle;
     public TextView requestID, areaModel, openTime, scheduledTime;
     public Button chat, accept;
-    private List<RequestRow> requestRowObject;
+    private List<Requests> requestRowObject;
     public CardView cardView;
 
-    public RecyclerViewHolders(final View itemView, final List<RequestRow> requestRowObject) {
+    public ComRecyclerViewHolders(final View itemView, final List<Requests> requestRowObject) {
         super(itemView);
         this.requestRowObject = requestRowObject;
 
