@@ -64,7 +64,8 @@ public class OpenRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHo
 
         holder.requestID.setText((String) requestMap.get("key"));
         holder.areaModel.setText((String) itemMap.get("make") + " " + (String) itemMap.get("model"));
-        holder.scheduledTime.setText("Placed on: " + (String) requestMap.get("openTime"));
+        holder.openTime.setText("Placed on: " + (String) requestMap.get("openTime"));
+        holder.scheduledTime.setText("Requested on: " + (String) requestMap.get("scheduleTime"));
 
         img = holder.RVCircle;
         String temp = (String) requestMap.get("item");
@@ -75,23 +76,23 @@ public class OpenRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHo
         holder.openTime.setTypeface(FontsManager.getRegularTypeface(context));
         holder.scheduledTime.setTypeface(FontsManager.getRegularTypeface(context));
 
-        holder.openTime.setText("Fetching name..");
+//        holder.openTime.setText("Fetching name..");
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/Customer/" + (String) requestMap.get("issuedBy"));
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> itemMap = (HashMap<String, Object>) dataSnapshot.getValue();
-                holder.openTime.setText("Raised by: " + (String) itemMap.get("name"));
-            }
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/Customer/" + (String) requestMap.get("issuedBy"));
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Map<String, Object> itemMap = (HashMap<String, Object>) dataSnapshot.getValue();
+//                holder.openTime.setText("Raised by: " + (String) itemMap.get("name"));
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
+//        holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
         holder.accept.setTypeface(FontsManager.getRegularTypeface(context));
 
         holder.accept.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +101,8 @@ public class OpenRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHo
                 if (isNetwork()) {
                     AppData.currentPath = (String) requestMap.get("key");
                     AppData.currentSelectedUser = (String) requestMap.get("issuedBy");
-                    fragment.showInfo();
+                    AppData.currentDate = (String) requestMap.get("scheduleTime");
+                    fragment.acceptDate();
                 } else
                     Toast.makeText(context, "Please connect to internet", Toast.LENGTH_SHORT).show();
             }

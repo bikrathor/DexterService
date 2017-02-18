@@ -22,6 +22,7 @@ public class AppData {
 
     public static String currentPath = "";
     public static String currentSelectedUser = "";
+    public static String currentDate = "";
 
     public static String currentImagePath = "";
 

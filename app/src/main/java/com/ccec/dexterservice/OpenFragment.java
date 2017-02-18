@@ -1,13 +1,16 @@
 package com.ccec.dexterservice;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -275,69 +278,120 @@ public class OpenFragment extends Fragment {
         subButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
+                saveDate();
+            }
+        });
+    }
+
+    private void saveDate() {
+        final ProgressDialog pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage("Processing..");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
+
+        SimpleDateFormat format = new SimpleDateFormat("d");
+        Date da = new Date();
+        da.setDate(Integer.parseInt(dayFire));
+        int mon = 0;
+        switch (monthFire) {
+            case "Jan":
+                mon = 0;
+                break;
+            case "Feb":
+                mon = 1;
+                break;
+            case "Mar":
+                mon = 2;
+                break;
+            case "Apr":
+                mon = 3;
+                break;
+            case "May":
+                mon = 4;
+                break;
+            case "Jun":
+                mon = 5;
+                break;
+            case "Jul":
+                mon = 6;
+                break;
+            case "Aug":
+                mon = 7;
+                break;
+            case "Sep":
+                mon = 8;
+                break;
+            case "Oct":
+                mon = 9;
+                break;
+            case "Nov":
+                mon = 10;
+                break;
+            case "Dec":
+                mon = 11;
+                break;
+        }
+        da.setMonth(mon);
+        String date = format.format(da);
+        if (date.endsWith("1") && !date.endsWith("11"))
+            format = new SimpleDateFormat("EE, MMM d'st'");
+        else if (date.endsWith("2") && !date.endsWith("12"))
+            format = new SimpleDateFormat("EE, MMM d'nd'");
+        else if (date.endsWith("3") && !date.endsWith("13"))
+            format = new SimpleDateFormat("EE, MMM d'rd'");
+        else
+            format = new SimpleDateFormat("EE, MMM d'th'");
+        String yourDate = format.format(da);
+        yourDate += ", " + timeButton.getText().toString();
+
+        final DatabaseReference firebasedbref = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
+        finalYourDate = yourDate;
+        firebasedbref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Requests requests = dataSnapshot.getValue(Requests.class);
+                requests.setScheduleTime(finalYourDate);
+                requests.setStatus("Accepted");
+
+                DatabaseReference firebasedbref2 = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
+                firebasedbref2.setValue(requests, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        pDialog.dismiss();
+                        sendNotification();
+                        new PostData().execute();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void acceptDate() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Accept scheduled date");
+        builder.setMessage("Are you sure you are available on " + AppData.currentDate + " ?");
+        builder.setCancelable(true);
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
                 final ProgressDialog pDialog = new ProgressDialog(getActivity());
                 pDialog.setMessage("Processing..");
                 pDialog.setIndeterminate(false);
                 pDialog.setCancelable(true);
                 pDialog.show();
 
-                SimpleDateFormat format = new SimpleDateFormat("d");
-                Date da = new Date();
-                da.setDate(Integer.parseInt(dayFire));
-                int mon = 0;
-                switch (monthFire) {
-                    case "Jan":
-                        mon = 0;
-                        break;
-                    case "Feb":
-                        mon = 1;
-                        break;
-                    case "Mar":
-                        mon = 2;
-                        break;
-                    case "Apr":
-                        mon = 3;
-                        break;
-                    case "May":
-                        mon = 4;
-                        break;
-                    case "Jun":
-                        mon = 5;
-                        break;
-                    case "Jul":
-                        mon = 6;
-                        break;
-                    case "Aug":
-                        mon = 7;
-                        break;
-                    case "Sep":
-                        mon = 8;
-                        break;
-                    case "Oct":
-                        mon = 9;
-                        break;
-                    case "Nov":
-                        mon = 10;
-                        break;
-                    case "Dec":
-                        mon = 11;
-                        break;
-                }
-                da.setMonth(mon);
-                String date = format.format(da);
-                if (date.endsWith("1") && !date.endsWith("11"))
-                    format = new SimpleDateFormat("EE, MMM d'st'");
-                else if (date.endsWith("2") && !date.endsWith("12"))
-                    format = new SimpleDateFormat("EE, MMM d'nd'");
-                else if (date.endsWith("3") && !date.endsWith("13"))
-                    format = new SimpleDateFormat("EE, MMM d'rd'");
-                else
-                    format = new SimpleDateFormat("EE, MMM d'th'");
-                String yourDate = format.format(da);
-                yourDate += ", " + timeButton.getText().toString();
-
                 final DatabaseReference firebasedbref = FirebaseDatabase.getInstance().getReference().child("requests/" + AppData.serviceType + "/" + AppData.currentPath);
-                finalYourDate = yourDate;
+                finalYourDate = AppData.currentDate;
                 firebasedbref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -350,7 +404,6 @@ public class OpenFragment extends Fragment {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 pDialog.dismiss();
-                                dialog.dismiss();
                                 sendNotification();
                                 new PostData().execute();
                             }
@@ -362,8 +415,20 @@ public class OpenFragment extends Fragment {
 
                     }
                 });
+
             }
         });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                showInfo();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void sendNotification() {

@@ -91,7 +91,7 @@ public class AcceptedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         });
 
         holder.accept.setVisibility(View.INVISIBLE);
-        holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
+//        holder.chat.setTypeface(FontsManager.getRegularTypeface(context));
 
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override

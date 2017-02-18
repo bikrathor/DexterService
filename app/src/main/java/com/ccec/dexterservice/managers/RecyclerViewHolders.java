@@ -33,7 +33,6 @@ public class RecyclerViewHolders extends RecyclerView.ViewHolder {
         openTime = (TextView) itemView.findViewById(R.id.tvOT);
         scheduledTime = (TextView) itemView.findViewById(R.id.tvST);
 
-        chat = (Button) itemView.findViewById(R.id.btnChat);
         accept = (Button) itemView.findViewById(R.id.btnAccept);
     }
 }
