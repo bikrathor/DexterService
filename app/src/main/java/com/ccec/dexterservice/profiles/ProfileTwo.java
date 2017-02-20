@@ -34,7 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 
 public class ProfileTwo extends Fragment {
-    private EditText fName, website, contact, location, makes;
+    private EditText fName, website, contact, makes;
     private Button btn;
     private UserSessionManager session;
     private String fNameE, websiteE, contactE, locationE, uid, makeE;
@@ -43,6 +43,7 @@ public class ProfileTwo extends Fragment {
     private ProgressDialog pDialog;
     private SwitchCompat switchCompat, switchCompat2, switchCompat3, switchCompat4;
     private boolean sw1 = false, sw2 = false, sw3 = false, sw4 = false;
+    private TextView location;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +62,7 @@ public class ProfileTwo extends Fragment {
         makeS = user.get(UserSessionManager.TAG_makes);
 
         fName = (EditText) view.findViewById(R.id.profile_full_name);
-        location = (EditText) view.findViewById(R.id.profile_location);
+        location = (TextView) view.findViewById(R.id.profile_location);
         website = (EditText) view.findViewById(R.id.profile_website);
         contact = (EditText) view.findViewById(R.id.profile_contact);
         makes = (EditText) view.findViewById(R.id.profile_make);

@@ -139,7 +139,8 @@
             android:orientation="horizontal"
             android:weightSum="100">
 
-            <EditText
+            <TextView
+                android:gravity="center_vertical"
                 android:id="@+id/profile_location"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
